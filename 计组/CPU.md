@@ -292,5 +292,13 @@ microcode也叫做microprogram。
 
 
 
+### 3.2.1 
 
+
+
+# 4. AMD
+
+
+
+## 4.1 AMD采用制程
 
