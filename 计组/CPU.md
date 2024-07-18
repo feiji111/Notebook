@@ -272,27 +272,89 @@ microcode也叫做microprogram。
 
 每一次制程的提升，一部分是缩短晶体管之间的距离(缩小half-pitch size)，另一个就是缩小晶体管的尺寸(gate length)。
 
-但是后来随着制程的不断进步(FinFET等技术)，"*nm"这个数字失去了其原本的意义，最近的一些制程纯粹是指采用特定技术制造的特定一代芯片，不对应于任何栅极长度或半间距。只是代表一种技术的迭代。
+但是后来随着制程的不断进步(FinFET等技术，Intel在22nm节点首先引入)，"*nm"这个数字失去了其原本的意义，最近的一些制程纯粹是指采用特定技术制造的特定一代芯片，不对应于任何栅极长度或半间距，只是代表一种技术的迭代，就像车型号一样具备不同的意义
+
+```
+“It used to be the technology node, the node number, means something, some features on the wafer. Today, these numbers are just numbers. They’re like models in a car – it’s like BMW 5-series or Mazda 6.  It doesn’t matter what the number is, it’s just a destination of the next technology, the name for it. So, let’s not confuse ourselves with the name of the node with what the technology actually offers.”
+```
 
 ![tech node naming.svg](assets/881px-tech_node_naming.svg.png)
 
 线性的0.7倍缩放，在面积上就约为0.5倍，遵循着摩尔定律。
 
-
+- **0.7x feature size叫做一个“大换代”Full-node**
+- **0.9x feature size叫做一个“小换代”Half-node**
 
 # 3. Intel
 
-
+![image-20240717185904956](assets/image-20240717185904956.png)
 
 ## 3.1 Intel制程
 
 
 
-## 3.2 List of Intel CPU microarchitectures(Intel CPU架构的演变)
+
+
+## 3.2 List of Intel CPU microarchitectures(Intel CPU微架构的演变)
 
 
 
-### 3.2.1 
+### 3.2.1  8086
+
+
+
+### 3.2.2 80186
+
+
+
+### 3.2.3 80286
+
+
+
+### 3.2.4 80386
+
+
+
+### 3.2.5 80486
+
+
+
+### 3.2.6 P5
+
+初代Pentium(也叫586)采用P5架构，dieshot如下
+
+![Intel Pentium A80501 66 MHz SX950 die image](assets/1920px-Intel_Pentium_A80501_66_SX950.JPG)
+
+![undefined](assets/1920px-Intel_Pentium_arch.svg.png)
+
+P5架构的特性：
+
+- superscalar架构
+- 64-bits external databus
+- code caches与data caches分离
+- FPU(float-point-unit)
+- Four-input address adders
+- hardware-based multiplier
+- Vitualized interrupt
+- Branch prediction
+
+
+
+**[Superscalar]()**
+
+
+
+**Branch Prediction**
+
+
+
+### 3.2.7 P6
+
+
+
+### Tick–tock model
+
+Intel于2007年
 
 
 
