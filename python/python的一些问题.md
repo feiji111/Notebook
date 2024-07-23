@@ -147,3 +147,8 @@ C/C++中需要用户自身管理好内存的分配与释放；而Python采用GC�
 
 **解决办法**：`pip uninstall nvidia_cublas_cu11`
 
+
+
+# 12、Python中的pickle库
+
+pickle用于序列化Python的对象，但是pickle对传入对象的要求是不能是内部类，也不能是lambda函数。因此这时需要用**dill**包代替。

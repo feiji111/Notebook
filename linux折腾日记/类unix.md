@@ -802,6 +802,8 @@ stackoverflow上对于**LIBRARY_PATH**与**LD_LIBRARY_PATH**这两个环境变�
 
 pkg-config与ldconfig
 
+llvm-config
+
 ### 3.1 pkg-config
 
 参考[Linux中pkg-config的使用](https://ivanzz1001.github.io/records/post/linux/2017/09/08/linux-pkg-config)
@@ -876,3 +878,12 @@ Linux程序在运行时对动态链接库的搜索顺序，由高到低如下：
 
 
 # Signal
+
+
+
+# Linux网络配置
+
+
+
+# Linux进程/线程与CPU核的绑定
+
