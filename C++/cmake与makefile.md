@@ -26,6 +26,10 @@
 
 
 
+在具体工程中，Debug和Release
+
+
+
 ## 1.3 在CMakeList.txt中引入OpenCV的总结
 
 在CMake中引入OpenCV有几种方式

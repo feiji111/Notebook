@@ -21,6 +21,7 @@
 3. **CSV**
 4. **XML**
 5. **PICKLE**
+6. **PROTOBUF**
 
 而pytorch保存模型实际上就使用到了python的序列化/反序列化库**pickle**。
 

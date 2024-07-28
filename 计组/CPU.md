@@ -31,7 +31,7 @@ wiki官方对于Computer architecture的一些理解：
 
 
 
-### 1.2 Instruction Set Architecture
+## 1.2 Instruction Set Architecture
 
 ### 1.2.1 Classification of ISAs
 
@@ -56,6 +56,8 @@ wiki官方对于Computer architecture的一些理解：
 
 
 
+
+
 CISC：x86 familiy
 
 RISC：arm，RISC-V，mips，PowerPC
@@ -64,7 +66,7 @@ VLIW：IA-64
 
 ### 1.2.2 Instruction set implementation
 
-这一部分就是[Microarchitecture](#1.3-Microarchitecture)
+这一部分就是[Microarchitecture](#1.3-Microarchitecture)所涉及到的内容
 
 
 
@@ -82,9 +84,51 @@ ISA与machine code并不是一个概念，machine code是0/1的序列，而ISA�
 
 <img src="assets/image-20240612142544799.png" alt="image-20240612142544799" style="zoom:67%;" />
 
-只要CPU是同一个ISA，那么对于同一条指令，不同CPU上最后生成的machine code(0/1序列)是相同的。但是ISA不规定ISA的实现方式，即不规定指令的执行方式。具体表现为，对于一条加法指令，其生成的machine code的0/1序列如何对应到一组控制信号控制control unit控制CPU的data flow是不同的，但最终都要实现一个加法操作。这一部分就涉及到microarchitecture。
+**只要CPU是同一个ISA，那么对于同一条指令，不同CPU上最后生成的machine code(0/1序列)是相同的。**但是ISA不规定ISA的实现方式，即不规定指令的执行方式。具体表现为，对于一条加法指令，其生成的machine code的0/1序列如何对应到一组控制信号控制control unit控制CPU的data flow是不同的，但最终都要实现一个加法操作。这一部分就涉及到microarchitecture。
 
 
+
+**这里就涉及到一个问题，对于同样是x86架构的intel和AMD的CPU，对于同样的x86_64指令，最后汇编器生成的机器码是否会相同？**
+
+
+
+### 1.2.4 一些拓展指令
+
+当我们使用CPU-Z查看CPU信息时(CPU-Z查看CPU信息也涉及到一种拓展指令，**[CPUID](#1.2.4.2-CPUID)**)，
+
+#### 1.2.4.1 Advanced Vector Extensions(AVX)
+
+AVX是一种SIMD类型的指令，拓展了原有的X86架构。最早由Intel提出，并且应用在Sandy Bridge微架构中。
+
+AVX2在AVX的基础上，增加了256位的整数向量操作，并且提出了一些新的指令。最早应用在Haswell微架构中。
+
+AVX-512则由256位拓展到了512位，最早应用在Intel [Xeon Phi x200](https://en.wikipedia.org/wiki/Xeon_Phi#Knights_Landing)中。
+
+
+
+#### 1.2.4.2 MMX
+
+
+
+#### 1.2.4.3 SSE
+
+
+
+#### 1.2.4.4 加密解密相关拓展指令
+
+
+
+#### 1.2.4.5 虚拟化相关指令
+
+
+
+#### 1.2.4.6 CPUID
+
+
+
+
+
+那么对于上述的这些拓展指令，实际上是如何使用的，参考[算法工程化]()
 
 ## 1.3 Microarchitecture
 
@@ -262,7 +306,11 @@ microcode也叫做microprogram。
 
 
 
-## 1.5
+## 1.5 Modern Processor
+
+现代处理器的几个主要特点：
+
+- 
 
 
 
@@ -364,3 +412,19 @@ Intel于2007年
 
 ## 4.1 AMD采用制程
 
+
+
+
+
+# 5. 关于X86授权
+
+x86最早由Intel提出，最早用于Intel 8086 CPU上。当时IBM指定了Intel的8086处理器作为IBM个人电脑的cpu芯片。但是IBM要求同一个芯片至少要拥有两家供应商。当时Intel还是小公司，于是机缘巧合找到AMD作为第二供应商。后来还有其它公司得到x86授权。比如[Cyrix](https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/Cyrix)（现为[威盛电子](https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E5%A8%81%E7%9B%9B%E9%9B%BB%E5%AD%90)所收购）。
+
+```
+1982年2月，AMD与Intel签约，成为得到许可的8086与8088制造业者和第二货源生产商。IBM要用Intel 8088在他们的IBM PC，但是IBM当时的政策要求他们所使用的芯片至少要有两个货源。在同样的安排下，AMD之后生产80286。
+但是在1986年，Intel撤回了这个协定，拒绝传达i386的技术详情。由于PC clone市场的流行与增长，Intel可以依照自己的规格来制造CPU，而不是依照IBM规格。
+AMD告Intel毁约，仲裁判AMD胜诉。但是Intel对此提出上诉。接下来，长期的法庭战争在1994年结束。加州最高法院判AMD胜诉，要Intel赔超过10亿美元的赔偿金。后来的法庭战争聚集在AMD是否有权利使用Intel派生的微代码(Microcode)。裁决没有明显的偏向任何一方。在面对这个不确定的情况，AMD被迫开发“防尘室版”的Intel微代码。他们的方式是：一组工程师描述微代码的功能，另一组在没有参考原微代码的情况下，自行开发拥有同样功能的微代码。
+1991年，AMD发布Am386，Intel 80386的复制版。AMD在一年以内就销售了100万只芯片。AMD接下来在1993年发布Am486。两者都以比Intel版本更低的价格销售。很多OEM，包括Compaq都使用Am486。由于电脑工业生产周期的缩短，逆向工程Intel产品的策略令AMD越来越难继续生存下去。因为这意味着他们的技术将一直落在Intel的后头。因此，他们开始开发他们自己的微处理器。[2]
+```
+
+因此目前拥有X86授权的Intel，AMD，VIA(威盛)，兆芯等为数不多的企业。
