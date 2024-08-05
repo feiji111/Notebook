@@ -6,28 +6,9 @@
 
 权重文件有多种格式
 
-### 1.1.1 序列化(serialization)与反序列化(deserialization)
-
-*"pickling"* 是将 Python 对象及其所拥有的层次结构转化为一个字节流(**字符串或者文件**，**序列化也可以序列化成字符串**)的过程，而 *"unpickling"* 是相反的操作，会将（来自一个 [binary file](https://docs.python.org/zh-cn/3/glossary.html#term-binary-file) 或者 [bytes-like object](https://docs.python.org/zh-cn/3/glossary.html#term-bytes-like-object) 的）字节流转化回一个对象层次结构。
-
-序列化也叫做：**“serialization”, “marshalling,” [[1\]](https://docs.python.org/3/library/pickle.html#id7) or “flattening”**
-
-这一部分还与**[json]()**以及**[yaml]()**有联系，本质上都是如何通存储结构化的对象(object)的信息。
-
-不同的序列化的方式也相应的有不同的物理格式，目前的比较常用的格式有：
-
-1. **JSON**
-2. **YAML**
-3. **CSV**
-4. **XML**
-5. **PICKLE**
-6. **PROTOBUF**
-
-而pytorch保存模型实际上就使用到了python的序列化/反序列化库**pickle**。
 
 
-
-### 1.1.2 Pytorch
+### 1.1.1 Pytorch
 
 对于pytorch，保存模型有三种存储方式
 
@@ -79,7 +60,7 @@ torch的模型文件后缀有.pkl，.pt，.pth，.pth.tar多种格式，对于�
 
 **多卡并行的模型每层的名称前多了一个“module”**，因此在单卡加载多卡模型时需要注意。
 
-### 1.1.3 TF
+### 1.1.2 TF
 
 
 

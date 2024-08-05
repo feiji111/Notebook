@@ -24,7 +24,7 @@ Thread --> Block --> Cluster --> Grid
 
 Thread Hierarchy涉及到一个变量`threadIdx`，可以是一个**一维到三维**向量，用以形成一个一维到三维的Block。同时还有一个`blockDim`变量用于获取Block的维度。
 
-一个Block中的Thread的个数是有限的，取决于GPU中的SM中有多少个CUDA Core（也交错Stream processor）。
+一个Block中的Thread的个数是有限的，取决于GPU中的SM中有多少个CUDA Core（也叫做Stream processor）。
 
 同理，Block Hierarchy涉及到一个变量`blockIdx`，可以是一个**一维到三维**向量，用以形成一个一维到三维的Grid。同时还有一个`gridDim`变量用于获取Grid的维度。
 
@@ -179,7 +179,7 @@ CUDA Runtime API与CUDA Driver API，[这里](../模型部署笔记/NVIDIA背后
 
 关于`nvcc`的详细细节，参考[NVIDIA CUDA Compiler Driver 12.4 documentation](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/)
 
-CUDA有自己的指令集架构ISP，**PTX**。
+CUDA有自己的指令集架构ISP，**PTX**与**SASS**。
 
 CUDA kernel可以用PTX编写，但是更多的是用C++之类的高级语言。
 
@@ -241,7 +241,7 @@ Binary code(cubin)是与架构有关的。`nvcc`通过`-code`选项指定目标�
 Binary compatibility is guaranteed from one minor revision to the next one, but not from one minor revision to the previous one or across major revisions. In other words, a cubin object generated for compute capability X.y will only execute on devices of compute capability X.z where z≥y.
 ```
 
-即对于binary code，其在此版本号中是向后兼容的，但是不能够做到跨主版本号兼容。
+即对于binary code，其在次版本号中是向后兼容的，但是不能够做到跨主版本号兼容。主板本号相同的情况下，低版本的binary code可以在相同或者更高次版本号的compute capability上运行。
 
 
 
@@ -261,7 +261,7 @@ Binary compatibility is supported only for the desktop. It is not supported for 
 
 通过`-arch`选项指定compute capability，这个选项作用于将C++代码编译为PTX code的过程中，比如`-arch=compute_50`，表面生成的PTX code的目标架构是compute capability 5.0。
 
-低compute capability版本生成的PTX code，可以被编译成高版本compute capability的binary code，只不过无法充分利用高版本的硬件特性，性能上有损失。
+低compute capability版本生成的PTX code，可以被编译成相同或者高版本compute capability的binary code，只不过无法充分利用高版本的硬件特性，性能上有损失。
 
 NVIDIA官方举的一个例子
 
@@ -282,6 +282,107 @@ In particular, to be able to execute code on future architectures with higher co
 
 
 `nvcc`中有`-arch -code -gencode`三个选项与之相关。
+
+```shell
+nvcc x.cu
+        -gencode arch=compute_50,code=sm_50
+        -gencode arch=compute_60,code=sm_60
+        -gencode arch=compute_70,code=\"compute_70,sm_70\"
+```
+
+
+
+关于这几个选项以及上面的三种Compatibility，在`nvcc`中有更多详细的内容
+
+```shell
+nvcc --help
+```
+
+不论是`-arch`还是`-code`，其后跟的选项都是Compute capability。二者的区别如下。
+
+`-arch`参数指定的是一个virtual architecture，而类似于`compute_*`这样的参数就是代表着一个virtual architecture
+
+`-code`参数指定的是一个real architecture，而类似于`sm_*`这样的参数就是代表着一个real architecture	
+
+`-arch`参数<=`-code`参数
+
+```
+--gpu-architecture <arch>                       (-arch)                         
+        Specify the name of the class of NVIDIA 'virtual' GPU architecture for which
+        the CUDA input files must be compiled.
+        With the exception as described for the shorthand below, the architecture
+        specified with this option must be a 'virtual' architecture (such as compute_50).
+        Normally, this option alone does not trigger assembly of the generated PTX
+        for a 'real' architecture (that is the role of nvcc option '--gpu-code',
+        see below); rather, its purpose is to control preprocessing and compilation
+        of the input to PTX.
+        For convenience, in case of simple nvcc compilations, the following shorthand
+        is supported.  If no value for option '--gpu-code' is specified, then the
+        value of this option defaults to the value of '--gpu-architecture'.  In this
+        situation, as only exception to the description above, the value specified
+        for '--gpu-architecture' may be a 'real' architecture (such as a sm_50),
+        in which case nvcc uses the specified 'real' architecture and its closest
+        'virtual' architecture as effective architecture values.  For example, 'nvcc
+        --gpu-architecture=sm_50' is equivalent to 'nvcc --gpu-architecture=compute_50
+        --gpu-code=sm_50,compute_50'.
+        -arch=all         build for all supported architectures (sm_*), and add PTX
+        for the highest major architecture to the generated code.
+        -arch=all-major   build for just supported major versions (sm_*0), plus the
+        earliest supported, and add PTX for the highest major architecture to the
+        generated code.
+        -arch=native      build for all architectures (sm_*) on the current system
+        Note: -arch=native, -arch=all, -arch=all-major cannot be used with the -code
+        option, but can be used with -gencode options.
+        Allowed values for this option:  'all','all-major','compute_50','compute_52',
+        'compute_53','compute_60','compute_61','compute_62','compute_70','compute_72',
+        'compute_75','compute_80','compute_86','compute_87','compute_89','compute_90',
+        'compute_90a','lto_50','lto_52','lto_53','lto_60','lto_61','lto_62','lto_70',
+        'lto_72','lto_75','lto_80','lto_86','lto_87','lto_89','lto_90','lto_90a',
+        'native','sm_50','sm_52','sm_53','sm_60','sm_61','sm_62','sm_70','sm_72',
+        'sm_75','sm_80','sm_86','sm_87','sm_89','sm_90','sm_90a'.
+
+--gpu-code <code>,...                           (-code)                         
+        Specify the name of the NVIDIA GPU to assemble and optimize PTX for.
+        nvcc embeds a compiled code image in the resulting executable for each specified
+        <code> architecture, which is a true binary load image for each 'real' architecture
+        (such as sm_50), and PTX code for the 'virtual' architecture (such as compute_50).
+        During runtime, such embedded PTX code is dynamically compiled by the CUDA
+        runtime system if no binary load image is found for the 'current' GPU.
+        Architectures specified for options '--gpu-architecture' and '--gpu-code'
+        may be 'virtual' as well as 'real', but the <code> architectures must be
+        compatible with the <arch> architecture.  When the '--gpu-code' option is
+        used, the value for the '--gpu-architecture' option must be a 'virtual' PTX
+        architecture.
+        For instance, '--gpu-architecture=compute_60' is not compatible with '--gpu-code=sm_52',
+        because the earlier compilation stages will assume the availability of 'compute_60'
+        features that are not present on 'sm_52'.
+        Allowed values for this option:  'compute_50','compute_52','compute_53',
+        'compute_60','compute_61','compute_62','compute_70','compute_72','compute_75',
+        'compute_80','compute_86','compute_87','compute_89','compute_90','compute_90a',
+        'lto_50','lto_52','lto_53','lto_60','lto_61','lto_62','lto_70','lto_72',
+        'lto_75','lto_80','lto_86','lto_87','lto_89','lto_90','lto_90a','sm_50',
+        'sm_52','sm_53','sm_60','sm_61','sm_62','sm_70','sm_72','sm_75','sm_80',
+        'sm_86','sm_87','sm_89','sm_90','sm_90a'.
+
+--generate-code <specification>,...             (-gencode)                      
+        This option provides a generalization of the '--gpu-architecture=<arch> --gpu-code=<code>,
+        ...' option combination for specifying nvcc behavior with respect to code
+        generation.  Where use of the previous options generates code for different
+        'real' architectures with the PTX for the same 'virtual' architecture, option
+        '--generate-code' allows multiple PTX generations for different 'virtual'
+        architectures.  In fact, '--gpu-architecture=<arch> --gpu-code=<code>,
+        ...' is equivalent to '--generate-code arch=<arch>,code=<code>,...'.
+        '--generate-code' options may be repeated for different virtual architectures.
+        Allowed keywords for this option:  'arch','code'.
+```
+
+
+
+**但是为什么`nvcc`允许`-arch`与`-code`不同，一般来说二者应该是要完全相同的?**
+
+
+
+
 
 
 

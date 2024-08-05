@@ -887,3 +887,13 @@ Linux程序在运行时对动态链接库的搜索顺序，由高到低如下：
 
 # Linux进程/线程与CPU核的绑定
 
+
+
+# Language binding
+
+wiki上对于Language binding的解释：
+
+In [programming](https://en.wikipedia.org/wiki/Computer_programming) and [software design](https://en.wikipedia.org/wiki/Software_design), **binding** is an [application programming interface](https://en.wikipedia.org/wiki/Application_programming_interface) (API) that provides [glue code](https://en.wikipedia.org/wiki/Glue_code) specifically made to allow a [programming language](https://en.wikipedia.org/wiki/Programming_language) to use a foreign [library](https://en.wikipedia.org/wiki/Library_(computer_science)) or [operating system](https://en.wikipedia.org/wiki/Operating_system) service (one that is not native to that language).
+
+
+

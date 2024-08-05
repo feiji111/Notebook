@@ -132,7 +132,7 @@ GPU-accelerated libraries主要涉及到以下库（动态/静态）：
 
 参考：[【CUDA】nvcc和nvidia-smi显示的版本不一致？](https://www.jianshu.com/p/eb5335708f2a)
 
-从[1.4](#1.4 runtime library)可知，CUDA有runtime API和driver API，二者都有对应的版本。
+从[1.4](#1.4 runtime library)可知，CUDA有runtime API(`libcudart.so`)和driver API(`libcuda.so`)，二者都有对应的版本。
 
 `nvcc -V`显示的是CUDA runtime API的版本，而`nvidia-smi`显示的是CUDA driver API的版本。
 
@@ -163,7 +163,7 @@ CUDA安装时需要设置两个环境变量：
 
 
 
-这里涉及到一个工具`update-alternatives`。
+这里涉及到一个工具[update-alternatives](../linux折腾日记/类unix#update-alternatives)。
 
 
 
