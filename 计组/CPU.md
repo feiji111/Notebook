@@ -400,6 +400,30 @@ P5架构的特性：
 
 
 
+
+
+### 3.2.8 NetBurst
+
+
+
+在NetBurst架构下，首次出现了Intel的多核CPU，**Pentium D**。但是Pentium D的双核并不是现在常见的双核集成在一块Die上，而是在两个Die上，将2个奔腾4Prescott的核心封装在一起，通过前端总线（FSB）分别连接北桥，通过北桥来连接两个核心。因此这种双核其实是一种“**胶水多核**”。
+
+### 3.2.9 Intel Core
+
+
+
+### 3.2.10 Nehalem
+
+
+
+### 3.2.11 Sandy Bridge
+
+
+
+### 3.2.12 Haswell
+
+
+
 ### Tick–tock model
 
 Intel于2007年
@@ -433,6 +457,59 @@ AMD告Intel毁约，仲裁判AMD胜诉。但是Intel对此提出上诉。接下�
 
 # 6. CPU片内总线
 
+![img](assets/220820031101.jpg)
+
+
+
+片内总线负责CPU内部各个模块之间的连接。
+
+最早的单核CPU采取的就是Star结构的片内总线，最中间的是CPU核心。但随着CPU由单核向多核转变，Star结构无法满足多核处理器的要求，因此片内总线由Star转为了Ring结构。
+
+<img src="assets/8dbc-xeon-processor-5.jpg" alt="xeon-processor-5.jpg" style="zoom:67%;" />
+
+上面是Intel Nehalem架构的片内总线。
+
+
+
+Ring总线由两个环组成，一个顺时针环和一个逆时针环。Ring总线的设计以下好处
+
+```
+1.双环设计可以保证任何两个ring stop之间距离不超过Ring Stop总数的一半，延迟较低。
+2.各个模块之间交互方便，不需要Core中转。这样一些高级加速技术，如DCA（Direct Cache Access), Crystal Beach等等应运而生。
+3.高速的ring bus保证了性能的极大提高。Core to Core latency 只有60ns左右，而带宽则高达数百G(记得Nehalem是192GB/s).
+4.方便灵活。增加一个Core，只要在Ring上面加个新的ring stop就好，不用像以前一样考虑复杂的互联问题。
+```
+
+但是CPU核心数量比较少的时候，Ring总线能够性能非常好，但是随着核心数量的增加，Ring总线的长度也会变长，Ring总线的性能会随之下降，跨核之间的通信延迟会很高。
+
+一般来说，单Ring总线的极限是12核心，多于12C之后会带来严重的延迟。因此就有了多Ring总线。
+
+
+
+下面是Intel 单Ring，1.5 Ring与双Ring总线结构。
+
+Intel针对不同的规格的Die(核心数量)也有不同的定义： **Low Core Count (LCC)**，**Medium Core Count (MCC)**，**High Core Count (HCC)**。
+
+![img](assets/syvQyzBnPZ52rRWuJfRyZV.png)
+
+![img](assets/R469BCeP6uv4kzr7efAPxM.png)
+
+在多Ring结构中，两个Ring通过一个双向的Pipeline连接。由于Ring间的通信延迟要远高于Ring内的通信延迟，因此两个Ring属于不同的[NUMA]() node。
+
+
+
+但是Ring总线的自身局限，使得其无法用于超多核心的CPU中，因此Mesh总线出现。Intel于Skylake与Knight Landing中引入了新的Mesh结构的片内总线。
+
+<img src="assets/d7f1-intelmesh.png" alt="Intel Skylake-X and Skylake-SP Utilize Mesh Architecture for Intra-Chip Communication" style="zoom:67%;" />
+
+
+
+Mesh总线结构的好处
+
+![img](assets/Broadwell-Ring-v-Skylake-Mesh-DRAM-Example.jpg)
+
+![Broadwell Ring V Skylake Mesh PCIe Example](assets/Broadwell-Ring-v-Skylake-Mesh-PCIe-Example.jpg)
+
 
 
 
@@ -444,3 +521,7 @@ AMD告Intel毁约，仲裁判AMD胜诉。但是Intel对此提出上诉。接下�
 
 
 # 8. 众核 
+
+
+
+# 9. NUMA与UMA

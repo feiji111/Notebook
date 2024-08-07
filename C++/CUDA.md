@@ -382,6 +382,12 @@ nvcc --help
 
 
 
+但是很多情况下我们采用`nvcc`编译时，有的时候并没有指定`-arch`和`-code`这两个选项，这个时候，`nvcc`会选择一个默认值
+
+```
+sm_52 is used as the default value; PTX is generated for compute_52 then assembled and optimized for sm_52.
+```
+
 
 
 
