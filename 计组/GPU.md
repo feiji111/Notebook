@@ -1,4 +1,18 @@
-# GPU
+# 1. GPU
+
+
+
+# 2. Nvidia
+
+
+
+# 3. AMD
+
+
+
+# 4. Intel
+
+
 
 
 

@@ -308,9 +308,16 @@ microcode也叫做microprogram。
 
 ## 1.5 Modern Processor
 
+参考：
+
+- [Modern Microprocessors A 90-Minute Guide!](https://www.lighterra.com/papers/modernmicroprocessors/)
+
 现代处理器的几个主要特点：
 
-- 
+- pipelining (superscalar, OOO, VLIW, branch prediction, predication)
+- multi-core and simultaneous multi-threading (SMT, hyper-threading)
+- SIMD vector instructions (MMX/SSE/AVX, AltiVec, NEON)
+- caches and the memory hierarchy
 
 
 
@@ -408,7 +415,7 @@ P5架构的特性：
 
 在NetBurst架构下，首次出现了Intel的多核CPU，**Pentium D**。但是Pentium D的双核并不是现在常见的双核集成在一块Die上，而是在两个Die上，将2个奔腾4Prescott的核心封装在一起，通过前端总线（FSB）分别连接北桥，通过北桥来连接两个核心。因此这种双核其实是一种“**胶水多核**”。
 
-### 3.2.9 Intel Core
+### 3.2.9 Core
 
 
 
@@ -424,9 +431,53 @@ P5架构的特性：
 
 
 
+### 3.2.13 Skylake
+
+
+
+### 3.2.14 Cypress Cove
+
+
+
+### 3.2.15 Palm Cove
+
+
+
+### 3.2.16 Sunny Cove
+
+
+
+### 3.2.17 Willow Cove
+
+
+
+### 3.2.18 Golden Cove
+
+
+
+### 3.2.19 Raptor Cove
+
+
+
+### 3.2.20 Redwood Cove
+
+
+
+### 3.2.21 Lion Cove
+
+
+
+
+
 ### Tick–tock model
 
-Intel于2007年
+Intel于2007年采用Tick-tock模式。
+
+```
+Under this model, every microarchitecture change (tock) was followed by a die shrink of the process technology (tick).
+```
+
+Tock改进微架构，Tick改进制程工艺。
 
 
 
@@ -436,7 +487,7 @@ Intel于2007年
 
 ## 4.1 AMD采用制程
 
-
+AMD采用TSMC制程。
 
 
 
@@ -457,6 +508,14 @@ AMD告Intel毁约，仲裁判AMD胜诉。但是Intel对此提出上诉。接下�
 
 # 6. CPU片内总线
 
+参考：
+
+- https://pcper.com/2017/06/intel-skylake-x-and-skylake-sp-utilize-mesh-architecture-for-intra-chip-communication/
+- https://www.servethehome.com/the-new-intel-mesh-interconnect-architecture-and-platform-implications/
+- https://www.servethehome.com/things-are-getting-meshy-next-generation-intel-skylake-sp-cpus-mesh-architecture/
+- https://www.intel.cn/content/www/cn/zh/developer/articles/technical/xeon-processor-scalable-family-technical-overview.html
+- [破茧化蝶，从Ring Bus到Mesh网络，CPU片内总线的进化之路](https://zhuanlan.zhihu.com/p/32216294)
+
 ![img](assets/220820031101.jpg)
 
 
@@ -471,7 +530,7 @@ AMD告Intel毁约，仲裁判AMD胜诉。但是Intel对此提出上诉。接下�
 
 
 
-Ring总线由两个环组成，一个顺时针环和一个逆时针环。Ring总线的设计以下好处
+Ring总线由两个环组成，一个顺时针环和一个逆时针环。不同模块通过**Ring Stop**挂载到总线上。Ring Stop中的control logic会决定是否数据会交给对应的模块。Ring总线的设计以下好处
 
 ```
 1.双环设计可以保证任何两个ring stop之间距离不超过Ring Stop总数的一半，延迟较低。
@@ -504,13 +563,26 @@ Intel针对不同的规格的Die(核心数量)也有不同的定义： **Low Cor
 
 
 
-Mesh总线结构的好处
+Mesh总线结构相比于Ring总线有以下优势
+
+```
+1.首先当然是灵活性。新的模块或者节点在Mesh中增加十分方便，它带来的延迟不是像ring bus一样线性增加，而是非线性的。从而可以容纳更多的内核。
+2.设计弹性很好，不需要1.5 ring和2ring的委曲求全。
+3.双向mesh网络减小了两个node之间的延迟。过去两个node之间通讯，最坏要绕过半个ring。而mesh整体node之间距离大大缩减。
+4.外部延迟大大缩短
+```
+
+访存延迟
 
 ![img](assets/Broadwell-Ring-v-Skylake-Mesh-DRAM-Example.jpg)
+
+IO延迟
 
 ![Broadwell Ring V Skylake Mesh PCIe Example](assets/Broadwell-Ring-v-Skylake-Mesh-PCIe-Example.jpg)
 
 
+
+但是Mesh带来的弊端是Die的大小会变大。 
 
 
 
@@ -525,3 +597,51 @@ Mesh总线结构的好处
 
 
 # 9. NUMA与UMA
+
+
+
+# 10. CPU视角下的整数、定点与浮点
+
+定点与浮点都是计算机中用于表示小数的方式。
+
+
+
+当谈论到浮点数时，就必须提到FPU以及IEEE 754 Floating Point Standard。
+
+早期的CPU(8088/8086，80286，80386)是无法进行浮点数运算的，只能够进行定点运算。
+
+
+
+而为了让CPU能够执行浮点数运算，通常有以下三种方式：
+
+1. A floating-point unit emulator (a floating-point library in software，即软件模拟浮点运算，称之为软浮点)
+2. Add-on FPU hardware
+3. Integrated FPU (in hardware)
+
+
+
+接下来分别简单讲一下三种方式的具体实现。
+
+## 10.1 Floating-point library(软件模拟FPU)
+
+
+
+## 10.2 Integrated FPUs
+
+
+
+## 10.3 Add-on FPUs
+
+
+
+
+
+现代CPU中，ALU负责整数运算，而FPU负责浮点数运算。
+
+因此CPU的性能也分为整数性能与浮点数性能，并且各自有其各自的应用场景。
+
+
+
+
+
+但是对于一些嵌入式处理器来说，由于资源首先，并不是所有的CPU都有FPU。
