@@ -192,7 +192,7 @@ CUDA kernel可以用PTX编写，但是更多的是用C++之类的高级语言。
 
 不论是C++还是PTX，最后都需要通过**nvcc**编译成binary code。
 
-**nvcc**实际上也是一各compiler driver，nvcc会调用许多其它的工具，比如`gcc`，`cicc`，`ptxas`，`fatbinary`等。
+**nvcc**实际上也是一个compiler driver，nvcc会调用许多其它的工具，比如`gcc`，`cicc`，`ptxas`，`fatbinary`等。
 
 
 
