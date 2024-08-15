@@ -119,7 +119,7 @@ Distribution有多种形式：
 
 
 
-wheel包本质上是一个zip文件，是已编译发行版的一种格式，包里一般不包含**.pyc**字节码。
+wheel包本质上是一个zip文件，是已编译发行版的一种格式，包里一般包含**.pyc**字节码。
 
 wheel包的文件名组成`{dist}-{version}(-{build})?-{python}-{abi}-{platform}.whl`
 

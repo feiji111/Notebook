@@ -804,6 +804,8 @@ pkg-config与ldconfig
 
 llvm-config
 
+CMake
+
 ### 3.1 pkg-config
 
 参考[Linux中pkg-config的使用](https://ivanzz1001.github.io/records/post/linux/2017/09/08/linux-pkg-config)
@@ -860,6 +862,20 @@ ldconfig会为三种共享库创建links与cache：
 
 
 cache文件默认为*/etc/ld.so.cache*，链接时首先从这个文件里查找，然后再到ld.so.conf中详细查找。
+
+
+
+### 3.3 llvm-config
+
+
+
+
+
+## 3.4 CMake
+
+
+
+
 
 
 

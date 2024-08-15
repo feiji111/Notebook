@@ -146,7 +146,9 @@ CUDA Toolkit Installer通常会集成了GPU driver Installer，如果你的CUDA�
 
 **驱动需要root权限才可以更换，但是CUDA版本只要驱动满足要求不需要root权限就可以更换**
 
-### 1.5.3 多版本CUDA共存
+### 1.5.3 CUDA安装以及多版本CUDA共存
+
+有了上述的一些关于CUDA的基本知识后，我们就可以看一看如何安装CUDA。
 
 CUDA安装时需要设置两个环境变量：
 
@@ -206,6 +208,10 @@ The NVIDIA CUDA Deep Neural Network library (cuDNN) is a GPU-accelerated library
 ```
 
 ![Dynamic Library Dependency Structure of cuDNN on Linux](assets/ovr-arch.png)
+
+
+
+cuDNN的安装
 
 
 

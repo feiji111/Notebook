@@ -30,7 +30,9 @@
 
 
 
-## 1.3 在CMakeList.txt中引入OpenCV的总结
+## 1.3 在CMakeList.txt中引入外部库的总结
+
+以OpenCV和FFmpeg两个第三方库为例，如果想顺利地在CMakeList.txt中引入第三方库，首先需要对第三方库的目录结构有比较清楚的认识。
 
 在CMake中引入OpenCV有几种方式
 
