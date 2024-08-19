@@ -155,6 +155,8 @@ git中，文件有几种状态：
 
 
 
+### 2.2. Ignoring Files
+
 
 
 ## 1.2 git workflow

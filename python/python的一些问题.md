@@ -74,3 +74,8 @@ python虚拟环境管理有多种工具：
 
 
 # 11. egg_info
+
+
+
+# 12. libstdc++.so.6: version `GLIBCXX_3.4.30' not found
+

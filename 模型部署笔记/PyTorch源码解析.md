@@ -4,7 +4,9 @@
 
 # 1. Installation From Source
 
-在分析源码之前，就必须能够成功从源码编译PyTorch。
+在分析源码之前，就必须能够成功从源码编译PyTorch。在编译PyTorch时，有非常多的选项可以选择，理清楚PyTorch的编译过程可以更好地了解PyTorch与其它组件之间的联系。
+
+
 
 
 
