@@ -405,7 +405,13 @@ In the X Window System, an X display manager is a graphical login manager which 
 
 ![img](assets/400px-Xserver_and_display_manager.svg.png)
 
-## 9. 总结
+
+
+## 10. GLX(Open**GL** Extension to the **X** Window System)
+
+
+
+## 11. 总结
 
 从上面的介绍，总体来看，各个component之间的层次关系
 

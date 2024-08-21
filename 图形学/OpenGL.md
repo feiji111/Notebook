@@ -85,7 +85,23 @@ glBindObject(GL_WINDOW_TARGET, 0);
 
 skip
 
-## 2.6 Additional Resources
+
+
+## 2.6 OpenGL Ecosystem
+
+这一部分内容是自己补充的内容，包括了OpenGL的整个生态以及OpenGL是如何被编译最后执行在GPU上的。
+
+![undefined](assets/2560px-Mesa_layers_of_crap_2016.svg.png)
+
+
+
+Linux下查看OpenGL版本有许多种方式
+
+
+
+
+
+## 2.7 Additional Resources
 
 - www.opengl.org/: official website of OpenGL. 
 - www.opengl.org/registry/: hosts the OpenGL specifications and extensions for all OpenGL versions.
@@ -130,7 +146,7 @@ skip，使用visual studio需要这一步
 
 LInux上需要链接到`libGL.so`，通过`-GL`选项。
 
-**这些库包含在Mesa，Nvidia，AMD dev packages中**，关于Mesa等相关概念，看[这里](../linux折腾日记/*nix.md#Linux-Graphic-Stack)
+**这些库包含在Mesa，Nvidia，AMD dev packages中**，关于Mesa等相关概念，看[这里](../linux折腾日记/类unix.md#Linux-Graphic-Stack)
 
 
 
@@ -210,7 +226,7 @@ glViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 这个函数设定的窗口实际上就是经过视口变换后的屏幕空间，所以(-1, 1)这个范围内的坐标会被映射到(0, 800)与(0, 600)之间
 ```
 
-但是每当window的大小改变时，也需要相应的改变viewport的大小，这一步可以通过**callback回调函数**实现，回调函数的作用有更多，更多详细的介绍，看[这里](../linux折腾日记/*nix.md#Callback-Function)
+但是每当window的大小改变时，也需要相应的改变viewport的大小，这一步可以通过**callback回调函数**实现，回调函数的作用有更多，更多详细的介绍，看[这里](../linux折腾日记/类unix.md#Callback-Function)
 
 **Callback**在之后也会被经常用到，一般来说callback function的注册需要在窗口创建之后，渲染开始之前。
 
@@ -284,6 +300,12 @@ OpenGL的**graphical pipeline**分为两部分：
 
 
 部分的shader是可以被替换成自己的shader的，而OpenGL中的shader是通过**GLSL(OpenGL Shading Language)**编写的。下图中的蓝色部分是可以被自己的shader替换的。
+
+**Shader Language**主要有三种：
+
+1. 基于OpenGL的**OpenGL Shading Language**，简称**GLSL**;
+2. 基于DirectX的**High Level Shading Language**，简称**HLSL**;
+3. 还有NVIDIA公司的**C for Graphic**，简称**Cg**语言。
 
 <img src="assets/image-20240414153819679.png" alt="image-20240414153819679" style="zoom:50%;" />
 
