@@ -491,6 +491,40 @@ AMD采用TSMC制程。
 
 
 
+## 4.2 List of AMD CPU microarchitectures(AMD CPU微架构的演变)
+
+
+
+### 4.2.? ZEN2
+
+
+
+
+
+## 4.? AMD Secure Processor 
+
+AMD Secure Processor(**AMD Platform Security Processor** (**PSP**), officially known as **AMD Secure Technology**)是一种[trusted execution environment](https://en.wikipedia.org/wiki/Trusted_execution_environment)子系统。
+
+AMD的CPU是x86架构，但是其内部有一个ARM Cortex-A5的ARM核心。这个ARM核心带有[TrustZone](https://en.wikipedia.org/wiki/TrustZone)拓展。这个ARM核心被集成到了AMD的CPU die中，作为一个协处理器。这个处理器上运行着一个on-chip firmware，用于验证SPI ROM以及从这个ROM中加载off-chip firmware。
+
+
+
+AMD的EYPC系列CPU会锁主板就是因为这个Secure Processor的存在。
+
+DELL的官方对其有相应的说明[Defense in-depth: Comprehensive Security on PowerEdge AMD EPYC Generation 2 (Rome) Servers](https://dl.dell.com/manuals/common/security_poweredge_amd_epyc_gen2.pdf)
+
+```
+On system power-on or reset, the AMD Secure Processor executes its firmware while the main CPU cores are held in reset. One of the AMD Secure Processor’s tasks is to provide a secure hardware root-of-trust by authenticating the initial PowerEdge BIOS firmware. If the initial PowerEdge BIOS is corrupted or compromised, the AMD Secure Processor will halt the system and prevent OS boot. If no corruption, the AMD Secure Processor starts the main CPU cores, and initial BIOS execution begins. 
+
+The very first time a CPU is powered on (typically in the Dell EMC factory) the AMD Secure Processor permanently stores a unique Dell EMC ID inside the CPU. This is also the case when a new off-the-shelf CPU is installed in a Dell EMC server. The unique Dell EMC ID inside the CPU binds the CPU to the Dell EMC server. Consequently, the AMD Secure Processor may not allow a PowerEdge server to boot if a CPU is transferred from a non-Dell EMC server (and CPU transferred from a Dell EMC server to a non-Dell EMC server may not boot). 
+```
+
+
+
+
+
+
+
 # 5. 关于X86授权
 
 x86最早由Intel提出，最早用于Intel 8086 CPU上。当时IBM指定了Intel的8086处理器作为IBM个人电脑的cpu芯片。但是IBM要求同一个芯片至少要拥有两家供应商。当时Intel还是小公司，于是机缘巧合找到AMD作为第二供应商。后来还有其它公司得到x86授权。比如[Cyrix](https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/Cyrix)（现为[威盛电子](https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E5%A8%81%E7%9B%9B%E9%9B%BB%E5%AD%90)所收购）。
@@ -594,7 +628,7 @@ IO延迟
 
 # 8. 众核 
 
-
+Xeon Phi
 
 # 9. NUMA与UMA
 

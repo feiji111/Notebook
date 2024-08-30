@@ -175,3 +175,7 @@ find_package(<PackageName> [version] [EXACT] [QUIET]
 
 对于Config mode下，寻找的过程更加复杂。
 
+
+
+# 3. CMake存在的争议
+
