@@ -7,6 +7,7 @@
 3. Attentionstore
 4. GraphRAG
 5. MSRA Ladder与T-MAC
+6. llamacpp
 
 
 
@@ -27,3 +28,12 @@ scale-out与scale-up
 
 
 LLM API **output token**与**input token**
+
+
+
+
+
+# FlashAttention
+
+<img src="assets/image-20240831100909652.png" alt="image-20240831100909652" style="zoom:67%;" />
+

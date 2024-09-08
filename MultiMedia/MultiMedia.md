@@ -209,3 +209,14 @@ GStreamer通过将许多processing elements连成一条pipeline，每一个proce
 
 
 
+# 3. 流媒体网络协议
+
+流媒体协议栈如下所示
+
+
+
+RTSP协议(Real-Time Streaming Protocol)承载在RTP与RTCP之上，三者的关系：视频数据由RTP协议传输，视频质量由RTCP控制，视频的控制由RTSP提供。
+
+
+
+RTMP协议
