@@ -132,3 +132,7 @@ CPU的PCIe通道数量指的是PCIe Lane的数量。
 
 
 因此就有PCIe switch
+
+
+
+# 3. RAID卡与HBA卡
