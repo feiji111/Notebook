@@ -103,9 +103,13 @@ FlashAttention把GPU的SRAM分拆成了4个部分，其中K block，V block，Q 
 
 **整体的正向传播过程：**
 
+<img src="assets/image-20240909093025926.png" alt="image-20240909093025926" style="zoom:67%;" />
 
 
 
+**整体的反向传播过程：**
+
+<img src="assets/image-20240909093328274.png" alt="image-20240909093328274" style="zoom:67%;" />
 
 
 
