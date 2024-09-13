@@ -26,3 +26,7 @@
 
 pytorch中的`Tensor`类有一个属性`requires_grad`，用以来声明需要对哪些Tensor自动求导。
 
+
+
+## 3.2 PyTorch显存管理
+
