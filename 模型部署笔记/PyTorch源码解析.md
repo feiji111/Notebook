@@ -30,3 +30,13 @@ pytorch中的`Tensor`类有一个属性`requires_grad`，用以来声明需要�
 
 ## 3.2 PyTorch显存管理
 
+
+
+## 3.3 DP
+
+
+
+## 3.4 DDP
+
+之前在[分布式训练与推理](./分布式训练与推理.md)中讲到了DDP。在PyTorch中也有相应的一些
+

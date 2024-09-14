@@ -113,11 +113,23 @@ FlashAttention把GPU的SRAM分拆成了4个部分，其中K block，V block，Q 
 
 
 
+# vLLM与PagedAttention
 
 
-# LLM推理引擎/推理框架
 
-LLM serving system关注于如何将LLM部署到实际的生产环境中，为上层的AI应用提供更好的服务。
+## Background
+
+当LLM需要开放给用户，提供服务时，往往在同一时间需要面对大量用户的请求。要处理如此大的吞吐量，需要将同一时间的请求batching在一块进行推理。
+
+<img src="assets/image-20240914190333270.png" alt="image-20240914190333270" style="zoom:50%;" />
+
+
+
+
+
+# LLM推理引擎/推理框架(LLM serving system)
+
+LLM serving system关注于如何将LLM部署到实际的生产环境中，为上层的AI应用提供更好的服务。因此LLM serving system典型的受众是提供LLM推理的云服务厂商。
 
 
 
@@ -133,6 +145,8 @@ LLM serving system关注于如何将LLM部署到实际的生产环境中，为�
 
 1. vLLM
 2. 
+
+
 
 
 
