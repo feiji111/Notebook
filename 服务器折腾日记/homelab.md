@@ -163,6 +163,13 @@ HBA卡在IT模式下，所连接的磁盘对系统是透明的，操作系统能
 
 
 
+RAID卡的功能主要由RoC(Raid-on-Chip芯片，用硬件实现Raid功能)实现。RoC实际上是两种芯片的载体，一部分实现Raid功能，一部分实现I/O功能，连接硬盘。
+
+而如果RoC去掉Raid功能，则是一个IOC(I/O controller芯片)。RAID卡可以在BIOS中关闭RAID功能，总而变为一个IOC。
+
+实际上上文中将IOC称为HBA卡是一个不准确的叫法，实际上任何能够连接到host bus上的adapter，包括显卡，网卡，IOC其实都是HBA。所以HBA的涵盖范围非常广泛。
+
+
+
 RAID卡有单通道，双通道以及八通道等的划分。
 
-RoC IoC
