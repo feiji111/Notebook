@@ -1,3 +1,5 @@
+
+
 # LLM/VLM压缩与推理加速
 
 一些LLM/VLM压缩与推理加速的技术与项目：
@@ -149,4 +151,40 @@ LLM serving system关注于如何将LLM部署到实际的生产环境中，为�
 
 
 
+
+## vLLM
+
+
+
+<img src="assets/image-20240917014339136.png" alt="image-20240917014339136" style="zoom:67%;" />
+
+vLLM的架构如上，分为几个部分：
+
+- Scheduler，vLLM的Scheduler是一个中心化的scheduler
+- KV Cache Manager，KV Cache Manager是通过scheduler发出的命令来控制KV Cache
+
+
+
+PagedAttention将KV cache切分成KV blocks，每一个KV block的大小为$B$，那么每一个key block与value block可以表示如下
+$$
+K_{j} = (k_{(j-1)B},...,k_{jB}) \\
+V_{j} = (v_{(j-1)B},...,v_{jB})
+$$
+相应的attention core的计算方式也转变为了分块计算
+$$
+A_{ij} = \frac{exp(q^{T}_{i}K_{j}/\sqrt{d})}{\sum_{t=1}^{\lceil i/B \rceil}exp(q^{T}_{i}K_{t}/\sqrt{d})},\ o_i = 
+$$
+
+
+<img src="assets/image-20240917074254731.png" alt="image-20240917074254731" style="zoom:67%;" />
+
+
+
+vLLM的显存管理借鉴了OS中的虚拟内存。vLLM将KV cache以固定大小的KV blocks组织，每一个KV block就相当于OS虚拟内存中的一个page。
+
+
+
+<img src="assets/image-20240917020317743.png" alt="image-20240917020317743" style="zoom:80%;" />
+
+<img src="assets/image-20240917020333292.png" alt="image-20240917020333292" style="zoom:80%;" />
 

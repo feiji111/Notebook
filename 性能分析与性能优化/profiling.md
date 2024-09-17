@@ -12,5 +12,12 @@
 
 既然需要做性能分析，就必须用到一些性能分析工具(profiler)。
 
+Linux上常用的工具有：
 
-
+1. perf
+2. systemtap
+3. dtrace
+4. Intel Vtune
+5. gdb
+6. oprofile
+7. 

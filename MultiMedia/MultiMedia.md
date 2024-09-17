@@ -2,6 +2,10 @@
 
 多媒体相关技术
 
+
+
+
+
 # 1. 一些基础知识
 
 ## 1.1 Video
@@ -181,7 +185,13 @@ wikipedia这里的定义比较宽泛，诸如archive file等都属于contrainer 
 
 
 
+## 1.5 Streaming Media
 
+串流(streaming)，是与downloading相对应的一种media transferring的方式。
+
+```
+ Media is transferred in a "stream" of packets from a server to a client and is rendered in real-time
+```
 
 
 
