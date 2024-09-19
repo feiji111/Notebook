@@ -249,3 +249,20 @@ AMD的[VIRTUALIZING IO THROUGH THE IO MEMORY MANAGEMENT UNIT (IOMMU)](https://pa
 
 ![Linux Storage Stack v6.9](assets/Linux-storage-stack-diagram v6.9.svg)
 
+
+
+# 3. SMP与AMP
+
+在利用`uname`命令输出系统信息时，系统信息中会带有SMP(Symmetric multiprocessing)。
+
+SMP是Symmetric multiprocessing，与之对应的是AMP(Asymmetric multiprocessing)。
+
+
+
+AMP是早于SMP出现的，是最早的多处理器系统实现。在SMP出现之前，AMP是多核计算机的唯一的解决方案。
+
+
+
+AMP与SMP都是多核处理器的运行模式(还有BMP？)，具体看操作系统的支持。
+
+目前来说，采用AMP的系统非常少，绝大部分都是采用SMP。AMP方面的资料和讨论都非常少。

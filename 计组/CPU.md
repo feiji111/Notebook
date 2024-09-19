@@ -634,6 +634,38 @@ Xeon Phi
 
 
 
+## 9.1 UMA(Uniform memory access)
+
+UMA是一种多核处理器的内存架构：
+
+1. UMA与SMP是配套的，UMA采用bus-based SMP架构，所有核心连接在内存总线上访问内存，不同核心访问内存是相同的
+2. UMA采用了crossbar switches
+3. UMA采用[multistage interconnection networks](https://en.wikipedia.org/wiki/Multistage_interconnection_networks)
+
+
+
+早期的计算机，内存控制器还没有整合进 CPU，所有的内存访问都需要经过北桥芯片来完成。CPU 通过前端总线（FSB，Front Side Bus）连接到北桥芯片，然后北桥芯片连接到内存，内存控制器集成在北桥芯片里面。
+
+UMA的拓展能力有限，随着处理器核心数量不断增加，更多的核心竞争内存总线，访问冲突会迅速增加。FSB成为性能瓶颈。
+
+
+
+## 9.2 NUMA(Non-uniform memory access)
+
+NUMA也是一种为多核处理器设计的内存架构。在NUMA架构下，所有的CPU核心被划分为多个NUMA结点，所有NUMA结点共享系统内存。每个NUMA结点有自己的local memory，同时也可以访问其它NUMA结点的non-local memory，只不过访问会更慢。
+
+NUMA是为了解决UMA的缺点。
+
+1. CPU 厂商把内存控制器集成到 CPU 内部，一般一个 CPU socket 会有一个独立的内存控制器。
+2. 每个 CPU scoket 独立连接到一部分内存，这部分 CPU 直连的内存称为“本地内存”。
+3. CPU 之间通过 QPI（Quick Path Interconnect） 总线进行连接。CPU 可以通过 QPI 总线访问不和自己直连的“远程内存”。
+
+![img](assets/20220602110808.png)
+
+但是像这种多CPU只有在多路服务器上才能够见到，因此一般只有在多路服务器上才能够对NUMA进行配置，而在一般的消费级电脑上无法配置。
+
+![03-01-System_socket_die_core_HT](assets/03-01-System_socket_die_core_HT.svg)
+
 # 10. CPU视角下的整数、定点与浮点
 
 定点与浮点都是计算机中用于表示小数的方式。
@@ -679,3 +711,29 @@ Xeon Phi
 
 
 但是对于一些嵌入式处理器来说，由于资源首先，并不是所有的CPU都有FPU。
+
+
+
+# 11. 查看CPU信息
+
+Linux下查看CPU信息有很多方式，`lspci`是比较常用的
+
+
+
+步进stepping
+
+修订Revision
+
+对于一个CPU，第一个版本是A-0(修订A，步进0)，后续每当对CPU进行修改时，步进都会增加。一般来说，小改动步进增加；大改动修订增加。
+
+但是lscpu并不能获得修订号，修订号与步进号的获得要更加复杂。
+
+Model CPU型号
+
+
+
+CPU Family：
+
+- 0=8086/8088 processor
+- 2=Intel 286 processor
+
