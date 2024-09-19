@@ -40,4 +40,32 @@ intelligent agent与环境互动，决策然后行动，为人类提供服务。
 
 上面是对于Intelligent agent的简单介绍，下面就是LLM Agent。
 
-LLM本身就是一个agent，但为什么还需要LLM agent？ 
+LLM本身就是一个agent，但为什么还需要LLM agent？
+
+
+
+首先看LLM不能做什么，能够帮助我们更好地理解LLM Agent。当我们想用LLM agent解决语言方面的问题，我们首先需要探讨一个语言中有什么，只有深入地了解之后，找到语言的一种表达方式，然后通过数学手段引申出相应的计算机方法。
+
+Language carries meaning，but it's not a flat structure
+
+
+
+
+
+树形结构一直存在于现实中的各个方面，树是图的一个特例。
+
+有向无环图DAG能够帮助我们理解语言等representation。 
+
+
+
+自然语言是有二义性的。
+
+
+
+语言(语境)是在语境中被定义的----维特根斯坦
+
+LLM如何表示语法，语义和逻辑？embedding
+
+
+
+LLM：more of rhyming than thinking
