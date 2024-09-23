@@ -1,3 +1,5 @@
+
+
 # Machine Learning Compilation
 
 
@@ -14,7 +16,13 @@ MLC不仅优化推理端，还需要优化训练端
 
 MLC需要考虑的目标：
 
-1. 
+1. Integration and Dependency Minimization
+
+   开发过程中使用的框架(PyTorch等)，会提供各种各样的模块，但是最终的模型可能只是用到了其中的一小部分模块，所以MLC的目的之一就是在部署过程中将所需要的模块打包进部署端。并且有的时候，部署时候所依赖的算子等可能来自于不同的厂商，MLC也需要将这些不同的依赖整合进部署端
+
+2. Leverage Hardware Native Acceleration
+
+   利用硬件特性，提高模型执行效率
 
 
 
@@ -26,6 +34,12 @@ MLC会做Tensor Function(算子Operator)之间的变换:
 
 
 **abstraction**与**implementation**是任何系统方向非常重要的思想。
+
+
+
+MLC中的四大抽象，由低到高：
+
+1. 
 
 
 
@@ -42,17 +56,50 @@ Primitive Tensor Function transformation(算子变换):
 
 
 
-当我们涉及到对Primitive Tensor Function本身做算子内优化时，就涉及到另一种abstraction：Tensor Program Abstraction。
+当我们涉及到对Primitive Tensor Function本身做算子内优化时，就涉及到另一种abstraction：Tensor Program Abstraction(可以表示一个算子，也可以表示多个算子)。
+
+buffers
+
+Loop nests
+
+computation
+
+
+
+TVM中的Tensor Program Abstraction就是TensorIR
+
+采用TensorIR做Tensor Program能够更方便地做变换，找到最优的。
+
+
+
+如何得到一个TensorIR表示的Tensor Program：
+
+- 利用tvm.script手写TensorIR
+- 利用tensor expression生成TensorIR
+- 利用已有的TensorIR融合成新的TensorIR
+
+
+
+因此，后续深入TVM，核心就在于：
+
+1. TVM的IRModule模块(也就是TensorIR)，有哪些方式可以表示不同的tensor function
+2. 对IRModule有哪些变换
+
+
+
+**变换**是MLC的核心中的核心。
 
 
 
 
 
+对于一些底层的算子库，其输出也是作为输入被传递给算子的。因为对于算子库来说，希望的是上层的框架来统一管理内存，而不是在算子中管理内存。**destination passing**
+
+但是在计算图中，我们并不像要这种destination passing的算子实现，TVM中`call_tir`就是为了解决这个问题。
 
 
 
-
-
+tensorflow到处计算图的问题。
 
 
 
