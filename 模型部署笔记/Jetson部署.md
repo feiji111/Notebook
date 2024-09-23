@@ -12,53 +12,7 @@
 
 对于pytorch，保存模型有三种存储方式
 
-**保存模型结构和参数**
 
-```python
-torch.save(model_object, './model.pth')
-```
-
-加载时
-
-```
-loaded_model = torch.load(save_dir)
-```
-
-**只保存参数**，网络结构由对应网络的class来定义
-
-```python
-torch.save(model_object.state_dict(), './params.pth')
-```
-
-加载时需要先获得模型结构
-
-```python
-loaded_model = models.resnet152()   #注意这里需要对模型结构有定义
-loaded_model.load_state_dict(torch.load(save_dir))
-```
-
-**保存训练检查点(模型结构，模型权重state_dict，优化器状态以及训练进度等)**
-
-```
-loaded_model = models.resnet152()
-checkpoint = torch.load('path_to_checkpoint')
-loaded_model.load_state_dict(checkpoint[''])
-```
-
-torch的模型文件后缀有.pkl，.pt，.pth，.pth.tar多种格式，对于不同的存储方式采用何种后缀并没有统一的规定，一般来说
-
-| 存储方式                 | 拓展名   |
-| ------------------------ | -------- |
-| 只存储模型权重           | .pth     |
-| 模型权重与模型结构       | .pt      |
-| 保存训练检查点checkpoint | .pth.tar |
-| 以上三种                 | .pkl     |
-
-
-
-**Pytorch单卡和多卡模型存储也有不同**
-
-**多卡并行的模型每层的名称前多了一个“module”**，因此在单卡加载多卡模型时需要注意。
 
 ### 1.1.2 TF
 
