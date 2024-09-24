@@ -33,6 +33,39 @@ LLM API **output token**与**input token**
 
 
 
+LLM量化：
+
+1. GPTQ
+2. GGML
+3. AWQ
+4. GGUF
+5. SmoothQuant
+
+
+
+模型结构改进：
+
+1. MQA
+2. GQA
+3. MLA
+4. flash attention
+5. page attention
+
+
+
+MHA是最早随着
+
+
+
+batch方面：
+
+1. continuous batch
+2. 
+
+
+
+FlashInfer和xformers作为算子库
+
 
 
 # FlashAttention
@@ -197,3 +230,25 @@ vLLM的显存管理借鉴了OS中的虚拟内存。vLLM将KV cache以固定大�
 
 
 ## GPT4o1
+
+
+
+
+
+# LLM的量化
+
+量化分为PTQ和QAT
+
+
+
+## LLM.int8()
+
+LLM.int8()的量化分为两步：
+
+1. vector-wise quantization
+2. mixed-precision decomposition
+
+
+
+<img src="assets/image-20240923192059450.png" alt="image-20240923192059450" style="zoom:67%;" />
+

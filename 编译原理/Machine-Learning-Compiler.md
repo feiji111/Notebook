@@ -39,7 +39,12 @@ MLC会做Tensor Function(算子Operator)之间的变换:
 
 MLC中的四大抽象，由低到高：
 
-1. 
+1. Computational Graphs
+2. Tensor Programs
+3. Libraries and Runtimes
+4. Hardware Primitives
+
+<img src="assets/image-20240923165018187.png" alt="image-20240923165018187" style="zoom:50%;" />
 
 
 
@@ -95,12 +100,35 @@ TVM中的Tensor Program Abstraction就是TensorIR
 
 对于一些底层的算子库，其输出也是作为输入被传递给算子的。因为对于算子库来说，希望的是上层的框架来统一管理内存，而不是在算子中管理内存。**destination passing**
 
-但是在计算图中，我们并不像要这种destination passing的算子实现，TVM中`call_tir`就是为了解决这个问题。
+但是在计算图中，我们并不想要这种destination passing的算子实现，TVM中`call_tir`就是为了解决这个问题。
+
+pure function纯函数，读边与写边
+
+tensorflow导出计算图的问题。
+
+alias-analysis，非计算图部分能否交换？？？？
+
+dl_pack()？？？
+
+TVM支持将各种环境下的对应的pack_function注册成为TVM环境函数
 
 
 
-tensorflow到处计算图的问题。
+TVM TensorIR算子与算子库算子结合构成计算图
+
+算子与计算图的不同表示、变换以及执行过程
+
+
+
+dataflow block用以标注计算图区域
+
+
+
+随机搜索 + 专家知识
+
+
 
 
 
 <img src="assets/1713773709318.jpeg" alt="No alternative text description for this image" style="zoom:50%;" />
+
