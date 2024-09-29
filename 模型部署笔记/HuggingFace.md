@@ -2,8 +2,6 @@
 
 HuggingFace就是机器学习界的Github，这样类比就够了
 
-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
-
 
 
 ## HuggingFace下载模型方法
