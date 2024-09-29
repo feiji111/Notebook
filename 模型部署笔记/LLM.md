@@ -10,6 +10,11 @@
 4. GraphRAG
 5. MSRA Ladder与T-MAC
 6. llamacpp
+7. xinference
+8. ollama
+9. TGI
+10. llamafile
+11. PPL(商汤)
 
 
 
@@ -40,6 +45,8 @@ LLM量化：
 3. AWQ
 4. GGUF
 5. SmoothQuant
+6. ZeroQuant
+7. 各种Quant
 
 
 
@@ -64,7 +71,12 @@ batch方面：
 
 
 
-FlashInfer和xformers作为算子库
+算子库：
+
+1. FlashInfer
+2. xformers
+
+
 
 
 
