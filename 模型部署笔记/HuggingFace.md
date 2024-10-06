@@ -1,10 +1,10 @@
 # HuggingFace
 
-HuggingFace就是机器学习界的Github，这样类比就够了
+HuggingFace就是机器学习界的Github，这样类比就够了。非常好用。
 
 
 
-## HuggingFace下载模型方法
+# 1. HuggingFace下载模型方法
 
 参考：
 
@@ -33,3 +33,12 @@ os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 
 
 huggingface
+
+
+
+# 2. HuggingFace accelerate
+
+
+
+# 3. Trainer
+

@@ -264,3 +264,124 @@ LLM.int8()的量化分为两步：
 
 <img src="assets/image-20240923192059450.png" alt="image-20240923192059450" style="zoom:67%;" />
 
+
+
+
+
+# Finetune(SFT, supervised fine-tuning)
+
+
+
+目前主流的Finetune方法：
+
+1. FFT全量微调
+2. RAG
+3. PEFT参数高效微调：
+   - Adapter Tuning
+   - LORA
+   - QLoRA
+   - Prefix-Tuning
+   - Prompt Tuning
+   - P-tuning v2
+
+
+
+目前也有许多LLM的微调工具：
+
+1. unsloth
+2. XTuner
+3. 
+
+
+
+
+
+# RAG
+
+
+
+
+
+# LLM训练：全精度，半精度，混合精度
+
+
+
+
+
+# Tokenization
+
+参考：
+
+1. [All you need to know about Tokenization in LLMs | by Tayyib Ul Hassan Gondal | The Deep Hub | Medium](https://medium.com/thedeephub/all-you-need-to-know-about-tokenization-in-llms-7a801302cf54)
+
+
+
+首先，什么是Token？下面的解释我觉得是最好的。
+
+```
+Tokens are the smallest units of meaning in a text that can be processed by a language model
+```
+
+Token可以是一个world，subworld甚至是一个character，可以有着不同的粒度，但是token还并不是后面我们提到的embdding涉及到数的概念，它还是由字符组成的一个小序列。
+
+
+
+因此为了将这些token能够被LLM处理，每一个token都会被赋予唯一的整数标识，这个整数标识会被向量化(也就是embedding)成一个向量。这样LLM就能够处理token。同样的LLM的输出也是一个向量，这个向量再被对应到某个整数，这个整数的对应token就是输出。
+
+因此，按照上面的逻辑，我们**需要一个双向的查找表(lookup table)，分别将token对应到一个integer以及将一个integer对应到一个token**。同时，我们还需要一个**embedding table，将一个integer与其对应的embedding对应起来**。
+
+
+
+
+
+当我们有一个corpus，将其tokenization需要经过一下几个步骤：
+
+1. **Find All Unique Characters**
+2. **Create Lookup Tables**
+3. **Use an Embedding Table**
+
+在LLM的pre-training和inference的workflow中，在tokenization之后，每一个token会有一个唯一的标识符，这个标识符是一个整数。同时还会有一个查找表，这个表就是每一个token对应的vector representation(**embedding**)。
+
+而vocabulary size就是一个tokenization后的unique token的个数。如果我们按照上面的逻辑，character-level的tokenization的话，那么最后的vocabulary size就是英文字母表的大小，也就是26个英文字母(再加上标点符号)，大概也没有超过100.
+
+这么做有两个问题：
+
+1. 这样的tokenization策略并没有考虑到其它的语言，只考虑了英文，language diversity差
+2. 由于vocabulary size非常小，因此会导致在处理corpus产生的序列长度会非常长，token的个数非常多，在LLM的最大输入序列长度(我们叫它**window size**)固定的情况下，由于每一个embedding只对应着一个英文字母或者标点符号，因此LLM一次能够处理的信息量就非常少
+
+
+
+因此很自然地，我们会用一个world-level tokenization的策略，但是这同样面临着两个问题：
+
+1. 这样的tokenization策略同样没有考虑到其它的语言，只考虑了英文，language diversity差
+2. 由于英语中的词汇量非常大，这会导致vocabulary size也非常大，所以embedding table也会非常大，增加了计算复杂度。并且LLM在window size不变的情况下，更多的信息被压缩进了这些token中，这可能并不是一件好事，可能会导致一个次优解。因为LLM需要捕捉长序列的依赖以及token中的一些细节上下文信息。
+
+**embedding table and the language model head will have more rows????**
+
+
+
+从上面的分析可以看出，tokenization的粒度的选择是一个非常重要的问题。不同粒度的分词器(tokenizer)实际上就是在词汇量(**vocabulary**)和语义独立性(**context-independent representation**)方面的取舍。
+
+一个折中的方案是采用subworld-tokenization策略。
+
+subworld的核心就是，对于常出现的词不拆分成subworld，而对于不经常出现的词拆封成多个subworlds。
+
+采用subworld：
+
+1. 能够维持一个适中大小的vocabulary
+2. 使得LLM能够比较好地学习到token的context-independent representations
+3. 使得LLM能够处理其从未见到过的单词
+
+
+
+目前常用的tokenization算法有：
+
+1. BPE
+2. WordPiece
+3. SentencePiece
+
+
+
+## BPE(Byte Pair Encoding)
+
+[Neural Machine Translation of Rare Words with Subword Units (Sennrich et al., 2015)](https://arxiv.org/abs/1508.07909)
