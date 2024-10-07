@@ -385,3 +385,17 @@ subworld的核心就是，对于常出现的词不拆分成subworld，而对于�
 ## BPE(Byte Pair Encoding)
 
 [Neural Machine Translation of Rare Words with Subword Units (Sennrich et al., 2015)](https://arxiv.org/abs/1508.07909)
+
+
+
+
+
+# 最优化方法
+
+
+
+
+
+## AdamW
+
+**L2 Norm与Weight Decay并不等价**

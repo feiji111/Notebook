@@ -1,7 +1,3 @@
-# Infrastructure
-
-
-
 # Numbers everyone (programmer) should know (2023)
 
 ```
@@ -22,4 +18,6 @@ Send packet CA->Netherlands->CA    150,000,000   ns  150,000 µs  150 ms
 ```
 
 
+
+# Infrastructure
 

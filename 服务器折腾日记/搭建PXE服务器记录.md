@@ -60,7 +60,7 @@
 
 ### 3.1 /srv与/var
 
-`/srv`文件夹：/srv文件夹用以存储本机提供的服务与数据，如 FTP，WWW或者CVS。本机安装的TFTP server与FPT server的服务数据的根目录就是/srv/tftp和/srv/ftp。而apche2的服务数据根目录为/var/www/html。
+`/srv`文件夹：/srv文件夹用以SAU存储本机提供的服务与数据，如 FTP，WWW或者CVS。本机安装的TFTP server与FPT server的服务数据的根目录就是/srv/tftp和/srv/ftp。而apche2的服务数据根目录为/var/www/html。
 
 
 

@@ -103,9 +103,13 @@ Self-Attention部分：
 
 1. 每一层的输入参数量是$[b,s,d_{model}]$
 2. 对于Q和K，合起来参数量为$[2,b,s,d_{model}]$
-3. $QK^T$得到的attention mask参数量为$[b,h,s,s]$
+3. $QK^T$得到的attention mask参数量为$[b,h,s^2]$
 4. softmax dropout的mask参数量$[b,h,s^2]$
-5. Attention over V参数量$[b,s,d_{model}]$，同时还需要存储dropout的输出，参数量$[b,h,s^2]$
+5. Attention over V参数量$[b,s,d_{model}]$，同时还需要存储dropout后的输出，参数量$[b,h,s^2]$
+6. linear projection layer，同样需要暂存输入，参数量$[b,s,d_{model}]$
+7. attention dropout，需要一个$[b,s,d_{model}]$的mask
+
+上面的Self-Attention部分加起来就是$11bsd_{model} + 5bhs^2$
 
 FFN部分，对于两层MLP的情况：
 
@@ -118,7 +122,7 @@ LayerNorm部分：
 
 1. 每一层LayerNorm也会存储其输入，参数量$[b,s,d_{model}]$，由于每一层有两个LayerNorm，所以$[2,b,s,d_{model}]$
 
-因此，对于每一层transformer，需要的activation参数量为,
+因此，对于每一层transformer，存储activation的显存大小(Byte)为,
 $$
 34bsd_{model} + 5bhs^2
 $$
@@ -140,7 +144,7 @@ $$
 
 1. **激活重计算(Recomputation)**，recomputation是一个非常常用的优化手段，通常通过时间换空间。FlashAttention中也用到了类似的思想。**PyTorch中的checkpoint机制也是如此**。
 2. **梯度累计(Gradient Accumulation)**
-3. 
+3. ......(等待补充)
 
 
 
@@ -191,9 +195,33 @@ LLAMA2 7B最后的输出还需要做一次RMSNorm，$[1,d_{model}]$
 
 
 
-因此如果采用BF16存储，那么模型参数就需要占用13.5GB的显存，与huggingface上LLAMA2 7B的模型大小正好相同。
 
 
+LLAMA2采用的是混合精度训练，模型参数和梯度都是BF16格式，优化器参数都是FP32格式。
+
+因此如果采用BF16存储，那么模型参数就需要占用14GB的显存，与huggingface上LLAMA2 7B的模型大小(13.5GB)正好相同。
+
+LLAMA采用AdamW优化器。AdamW优化器需要存储一阶动量，二阶方差以及模型参数副本，因此优化器的参数量大概是21B，这些参数都是全精度的FP32格式。
+
+所以**14(模型参数) + 14(梯度) + 84(优化器参数) = 112GB**
+
+
+
+这还没有算上前向传播时的中间结果，中间结果占用显存才是大头。
+
+```
+一个具体的例子，模型为1.5B的GPT-2，序列长度为1K，batch size为32，则消耗显存为60GB。
+```
+
+
+
+LLAMA2训练采用的硬件配置：
+
+按照LLAMA2技术报告里提到的，LLAMA2在分别在Meta的两个集群训练：**Meta's Research Super Cluster (RSC)**以及Meta内部的**production clusters**。
+
+**Meta's Research Super Cluster (RSC)**：2,000 NVIDIA DGX A100 systems，总计16000块A100。
+
+Meta内部的集群具体配置不太清楚(***等待后续补充......***)
 
 
 
