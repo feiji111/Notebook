@@ -66,6 +66,12 @@ NVSwitch截止目前(2024-10-8)，一共有4代。
 
 
 
+NVSwitch最早是一块芯片的形式，放置在HGX平台上。
+
+后续GB200架构上，NVIDIA用NVSwitch芯片做出了真正的NVLink交换机。包含两块NVLink Switch芯片，每块72个端口。每个端口的双向带块100GB/s
+
+
+
 ## 1.4 HBM
 
 ## 1.5 NVIDIA HGX与DGX
@@ -135,7 +141,7 @@ A100 HGX正面长这样，正面的接口包括了中间的PCIe接口，用于�
 
 
 
-一般的A100 HGX GPU服务器拓扑结构如下
+一般的A100 HGX GPU服务器拓扑结构如下。
 
 <img src="assets/hUbNYU9WFM9lMmtvzMfegUABzDRxCCbezpa1M4-6qQSj8cwS5QK7zVcGAO5bWTkPWKhUaepQaIo8oIMa9CrtyN2dZ6l3TYU8YbGPkmMg5Gh_XT_hJqABXwVWE6D5Qh4a2hNPVXD2.png" alt="img" style="zoom:50%;" />
 
@@ -164,6 +170,12 @@ GPU服务器都是模块化的设计，GPU模组就是NVIDIA HGX。
 ## 1.6 SXM
 
 
+
+## 1.7 InfiniBand
+
+
+
+# 2. 软件部分
 
 
 
