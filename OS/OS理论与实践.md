@@ -266,3 +266,26 @@ AMP是早于SMP出现的，是最早的多处理器系统实现。在SMP出现�
 AMP与SMP都是多核处理器的运行模式(还有BMP？)，具体看操作系统的支持。
 
 目前来说，采用AMP的系统非常少，绝大部分都是采用SMP。AMP方面的资料和讨论都非常少。
+
+
+
+# 4. Memory Management
+
+在Linux中，内存是分成一个个page管理的。我们可以创建4个象限，每一个page的类型都属于这四个象限中的一个。
+
+```
+                                     Private | Shared
+                                 1           |          2
+            Anonymous  . stack               |
+                       . malloc()            |
+                       . brk()/sbrk()        | . POSIX shm*
+                       . mmap(PRIVATE, ANON) | . mmap(SHARED, ANON)
+                      -----------------------+----------------------
+                       . mmap(PRIVATE, fd)   | . mmap(SHARED, fd)
+          File-backed  . pgms/shared libs    |
+                                 3           |          4
+```
+
+其中横坐标分为Private与Shared
+
+纵坐标分为Anonymous与File-backed
