@@ -288,4 +288,4 @@ AMP与SMP都是多核处理器的运行模式(还有BMP？)，具体看操作系
 
 其中横坐标分为Private与Shared
 
-纵坐标分为Anonymous与File-backed
+纵坐标分为Anonymous与File-backed，代表
