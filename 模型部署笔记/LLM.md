@@ -168,9 +168,39 @@ FlashAttention把GPU的SRAM分拆成了4个部分，其中K block，V block，Q 
 
 当LLM需要开放给用户，提供服务时，往往在同一时间需要面对大量用户的请求。要处理如此大的吞吐量，需要将同一时间的请求batching在一块进行推理。
 
+LLM推理端需要面对三大bound：compute-bound，memory-bound，latency bound(最后一个bound不太清楚)。而带来memory-bound的重要因素之一就是KV cache。
+
+
+
 <img src="assets/image-20240914190333270.png" alt="image-20240914190333270" style="zoom:50%;" />
 
+LLM推理过程中，显存的占用情况如下
 
+<img src="assets/image-20241012162833524.png" alt="image-20241012162833524" style="zoom:50%;" />
+
+有三种类型的显存浪费：
+
+1. reserved
+2. internal fragmentation
+3. external fragmentation
+
+<img src="assets/image-20241012164605597.png" alt="image-20241012164605597" style="zoom:50%;" />
+
+
+
+
+
+KV cache的计算：
+
+对于每一个token，隐藏层维度为$d$，层数为$L$，采用FP16格式，需要
+$$
+2 \times d \times L \times 2
+$$
+大小的KV cache来存储。
+
+
+
+显存将会是一个长期的bottleneck。
 
 
 
