@@ -271,6 +271,20 @@ AMP与SMP都是多核处理器的运行模式(还有BMP？)，具体看操作系
 
 # 4. Memory Management
 
+
+
+## 4.1 虚拟内存(Virtual Memory)与地址空间(Address Space)
+
+
+
+
+
+## 4.? mmap
+
+Linux下内存管理分为虚拟内存和物理内存。
+
+
+
 在Linux中，内存是分成一个个page管理的。我们可以创建4个象限，每一个page的类型都属于这四个象限中的一个。
 
 ```
@@ -289,3 +303,8 @@ AMP与SMP都是多核处理器的运行模式(还有BMP？)，具体看操作系
 其中横坐标分为Private与Shared
 
 纵坐标分为Anonymous与File-backed，代表
+
+
+
+# 5. Time
+
