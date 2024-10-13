@@ -98,7 +98,7 @@ TVM中的Tensor Program Abstraction就是TensorIR
 
 
 
-对于一些底层的算子库，其输出也是作为输入被传递给算子的。因为对于算子库来说，希望的是上层的框架来统一管理内存，而不是在算子中管理内存。**destination passing**
+对于一些底层的算子库，其输出也是作为输入被传递给算子的。因为对于算子库来说，希望的是上层的框架来统一管理内存，而不是在算子中管理内存。这种方式叫做**destination passing**。
 
 但是在计算图中，我们并不想要这种destination passing的算子实现，TVM中`call_tir`就是为了解决这个问题。
 
