@@ -206,6 +206,8 @@ $$
 
 # LLM推理引擎/推理框架(LLM serving system)
 
+![image-20241014233032971](assets/image-20241014233032971.png)
+
 LLM serving system关注于如何将LLM部署到实际的生产环境中，为上层的AI应用提供更好的服务。因此LLM serving system典型的受众是提供LLM推理的云服务厂商。
 
 

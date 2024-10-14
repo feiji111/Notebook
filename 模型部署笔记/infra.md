@@ -181,3 +181,12 @@ GPU服务器都是模块化的设计，GPU模组就是NVIDIA HGX。
 
 
 
+## 2.1 集群管理
+
+[深度学习的集群管理 - 李理的博客 (fancyerii.github.io)](https://fancyerii.github.io/2024/04/28/cluster-manager/)
+
+- Yarn
+- Spark
+- k8s
+- Ray
+- Slurm
