@@ -182,7 +182,7 @@ Controller的实现方式有两种：
 
 <img src="assets/image-20240615161109134.png" alt="image-20240615161109134" style="zoom:67%;" />
 
-#### 1.3.1.1 hardwire方式
+#### 1.3.1.1 hardwire方式(Hardwired Control Unit)
 
 hardwire的方式实现是通过组合逻辑电路实现。对于每一条指令的machine code(0/1序列)，control unit会产生相应的control signals，从而控制datapath，实现对应的操作。
 
@@ -200,13 +200,15 @@ hardwire方式的实现又可以分为Single Cycle和Multi Cycle实现。
 
 单周期的实现的hardwired control unit就只需要组合逻辑电路，对于每条指令产生对应的控制信号。
 
-这里以RISC-V的部分指令为例，按照[1.3](#1.3-Microarchitecture)中的设计方法，得到一个真值表。RISC-V中指令类型除了与op字段有关，还和func字段有关。因此需要两个控制器，op(主控)，func(ALU局控)，所以还需要一个func字段相关的真值表。
+这里以RISC-V的部分指令为例，按照[1.3](#1.3-Microarchitecture)中的设计方法，得到一个真值表。RISC-V中指令类型除了与op字段有关，还和func字段有关。因此需要两个控制器，op(主控，用以产生ALUOp bits)，func(ALU局控，产生真正的用于控制ALU的信号)，所以还需要一个func字段相关的真值表。
+
+**这种多层的decoding是一种常用的技术。**
 
 ALU control function有4个bit的输出(**Operation3, Operation2, Operation1, and Operation0**)，真值表如下
 
 <img src="assets/image-20240615155037248.png" alt="image-20240615155037248" style="zoom: 67%;" />
 
-实际上ALU control function的真值表是从下面这张表简化而来的，因为对于
+实际上ALU control function的真值表是从下面这张表简化而来的(**参考数电中的真值表化简**)。
 
 <img src="assets/image-20240615161802613.png" alt="image-20240615161802613" style="zoom:67%;" />
 
@@ -214,9 +216,9 @@ ALU control function有4个bit的输出(**Operation3, Operation2, Operation1, an
 
 <img src="assets/image-20240615155809263.png" alt="image-20240615155809263" style="zoom:67%;" />
 
+每条指令与真值表是一一对应的关系，通过真值表，设计组合逻辑电路，就可以实现decoder。
 
-
-每条指令与真值表是一一对应的关系，通过真值表，设计组合逻辑电路，就可以实现decoder，而main control function真值表如下
+而main control function真值表如下
 
 <img src="assets/image-20240615160205875.png" alt="image-20240615160205875" style="zoom:67%;" />
 
@@ -225,6 +227,10 @@ ALU control function有4个bit的输出(**Operation3, Operation2, Operation1, an
 <img src="assets/image-20240615160302097.png" alt="image-20240615160302097" style="zoom:67%;" />
 
 
+
+
+
+采用单周期，弊端在于由于每一条指令执行的各个阶段都在一个时钟周期内完成，因此data path上的对于一条指令的执行任何一个functional unit不能被使用到两次，如果有的单元需要被用到两次(比如Memory既要读取一次指令又要读取一次数据)，就需要多个同样的functional unit。
 
 ##### 1.3.1.1.2 Multi Cycle实现
 
@@ -268,13 +274,22 @@ decoder用于解码指令，解码后的输出与external input和conditional co
 
 
 
-### 1.3.2 Microcode方式
+### 1.3.2 Microcode方式(Microcode方式只适用于多周期，Microprogrammed Control Unit)
 
-microcode也叫做microprogram。
+microcode也叫做microprogram，由Maurice Wilkes发明，他也因此获得了图灵奖。
 
-采用microcode方式实现的control units，microcode也相当于一层abstraction layer，将
+采用microcode方式实现的control units，microcode也相当于ISA与microarchitecture之间的一层abstraction layer。
 
-通过microcode来实现ISA的指令(machine code)，microcode是circuit-level的操作。
+通过microcode来实现ISA的指令(machine code)，microcode是circuit-level的操作。每一条指令通过微程序(microprogram)实现，微程序由一系列微指令(microinstruction)构成。
+
+微指令通过microcode execution engine解码，产生对应的控制信号。所有指令额微程序存放在Control Storage(控存)中，这个控存可以是一个ROM也可以是PLA。
+
+
+
+微指令格式的设计非常重要：
+
+1. 水平型微指令(**Horizontal microcode**)
+2. 垂直型微指令(**Vertical microcode**)
 
 
 
@@ -284,13 +299,7 @@ microcode也叫做microprogram。
 
 
 
-### 1.3.3 Single Cycle
 
-
-
-
-
-### 1.3.4 Multi Cycle
 
 
 
@@ -321,13 +330,23 @@ microcode也叫做microprogram。
 
 
 
+### 1.5.1 Pipeling & Instruction-Level Parallelism
+
+
+
+### 1.5.2 
+
+
+
+
+
 # 2. 制程
 
 制程**technology node** (also **process node**, **process technology** or simply **node**)，最早是用以表示栅极的长度(**gate length**)和金属半间距(M1 half-pitch size，这里的M1指的是lowest metal layer，metal 1)。
 
 每一次制程的提升，一部分是缩短晶体管之间的距离(缩小half-pitch size)，另一个就是缩小晶体管的尺寸(gate length)。
 
-但是后来随着制程的不断进步(FinFET等技术，Intel在22nm节点首先引入)，"*nm"这个数字失去了其原本的意义，最近的一些制程纯粹是指采用特定技术制造的特定一代芯片，不对应于任何栅极长度或半间距，只是代表一种技术的迭代，就像车型号一样具备不同的意义
+但是后来随着制程的不断进步(FinFET等技术，Intel在22nm节点首先引入)，"***nm**"这个数字失去了其原本的意义，最近的一些制程纯粹是指采用特定技术制造的特定一代芯片，不对应于任何栅极长度或半间距，只是代表一种技术的迭代，就像车型号一样具备不同的意义
 
 ```
 “It used to be the technology node, the node number, means something, some features on the wafer. Today, these numbers are just numbers. They’re like models in a car – it’s like BMW 5-series or Mazda 6.  It doesn’t matter what the number is, it’s just a destination of the next technology, the name for it. So, let’s not confuse ourselves with the name of the node with what the technology actually offers.”
