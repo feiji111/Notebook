@@ -280,7 +280,7 @@ microcode也叫做microprogram，由Maurice Wilkes发明，他也因此获得了
 
 采用microcode方式实现的control units，microcode也相当于ISA与microarchitecture之间的一层abstraction layer。
 
-通过microcode来实现ISA的指令(machine code)，microcode是circuit-level的操作。每一条指令通过微程序(microprogram)实现，微程序由一系列微指令(microinstruction)构成。
+通过microcode来实现ISA的指令(machine code)，microcode是circuit-level的操作。每一条指令通过微程序(microprogram)实现，微程序由一系列微指令(microinstruction)构成，而一条微指令又是由多个微命令(微操作，micro-operations)。微命令/微操作可以理解为
 
 微指令通过microcode execution engine解码，产生对应的控制信号。所有指令额微程序存放在Control Storage(控存)中，这个控存可以是一个ROM也可以是PLA。
 
@@ -288,7 +288,10 @@ microcode也叫做microprogram，由Maurice Wilkes发明，他也因此获得了
 
 微指令格式的设计非常重要：
 
-1. 水平型微指令(**Horizontal microcode**)
+1. 水平型微指令(**Horizontal microcode**)：
+   - 直接控制(不编码)
+   - 字段直接编码(译)法
+   - 字段间接编码(译)法
 2. 垂直型微指令(**Vertical microcode**)
 
 
