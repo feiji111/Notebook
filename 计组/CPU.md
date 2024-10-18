@@ -280,9 +280,17 @@ microcode也叫做microprogram，由Maurice Wilkes发明，他也因此获得了
 
 采用microcode方式实现的control units，microcode也相当于ISA与microarchitecture之间的一层abstraction layer。
 
-通过microcode来实现ISA的指令(machine code)，microcode是circuit-level的操作。每一条指令通过微程序(microprogram)实现，微程序由一系列微指令(microinstruction)构成，而一条微指令又是由多个微命令(微操作，micro-operations)。微命令/微操作可以理解为
+通过microcode来实现ISA的指令(machine code)，microcode是circuit-level的操作。每一条指令通过微程序(microprogram)实现，微程序由一系列微指令(microinstruction)构成，而一条微指令又是由多个微命令(微操作，micro-operations，也叫做μOps)。微命令/微操作可以理解为微架构内部的操作。**一般来说一个微操作对应着CPU微架构中的datapath一个组件的控制信号。**
 
-微指令通过microcode execution engine解码，产生对应的控制信号。所有指令额微程序存放在Control Storage(控存)中，这个控存可以是一个ROM也可以是PLA。
+这些μOps会被按照一定的编码方式编码，然后存放在微指令中。
+
+<img src="assets/image-20241016191439004.png" alt="image-20241016191439004" style="zoom:50%;" />
+
+微指令通过microcode execution engine解码，产生对应的控制信号。所有指令的微程序存放在Control Storage(控存)中，这个控存可以是一个ROM也可以是PLA。
+
+![undefined](assets/2560px-Micro-operations.svg.png)
+
+一些复杂的指令会被解码成多条μOps，
 
 
 
@@ -337,7 +345,27 @@ microcode也叫做microprogram，由Maurice Wilkes发明，他也因此获得了
 
 
 
+取指(Fetch)->解码(Decode)->执行(Execute)->写回(Write Back)
+
+现代处理器的深度大约是15~20。
+
+Fetch与Decode阶段构成前端(Front End)， 6~10个流水线阶段。
+
+Execute与Write Back构成后端(Back End)，6~10个流水线阶段。
+
+
+
+
+
+Branch-prediction
+
+
+
 ### 1.5.2 
+
+
+
+## 1.6 实例分析Intel
 
 
 

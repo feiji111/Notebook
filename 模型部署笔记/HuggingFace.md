@@ -42,3 +42,21 @@ huggingface
 
 # 3. Trainer
 
+
+
+# 4. transformers库
+
+`ModelOutput`是所有模型输出的基类
+
+`@dataclass`装饰器
+
+
+
+
+
+`PretrainedModel`继承自pytorch的`nn.Module`，是所有预训练模型的基类，同时混合了几个不同的 mixin 类，如 `ModuleUtilsMixin`、`GenerationMixin`、`PushToHubMixin` 和 `PeftAdapterMixin`。
+
+
+
+以Llama为例，
+
