@@ -72,6 +72,17 @@ LLM：more of rhyming than thinking
 
 
 
+Agent = LLM + 记忆 + 感知 + 规划 + 工具
+
+LLM相当于Agent的大脑
+
 # World Model
 
 世界模型，即通过预测未来的范式对数字世界和物理世界进行理解，一直以来被认为是通往通用人工智能（AGI）的关键路径之一，与当前大模型推崇的智能体（Agent）方向互相区分。
+
+
+
+
+
+# Langchain
+
