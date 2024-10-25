@@ -304,6 +304,20 @@ LLM.int8()的量化分为两步：
 
 
 
+**Instruction-following data**。
+
+GPT-3 --> InstructGPT/ChatGPT
+
+T5 --> FLAN-T5
+
+PaLM --> FLAN-PaLM
+
+OPT --> OPT-IML
+
+Flamingo与Vicuna
+
+
+
 目前主流的Finetune方法：
 
 1. FFT全量微调
@@ -330,7 +344,23 @@ LLM.int8()的量化分为两步：
 
 # RAG与Long Context
 
+RAG的开山之作[Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks]()
 
+
+
+RAG-Squence Model，每个检索到的document负责生成一个序列，最后再加权求和
+$$
+p_{RAG-Sequence}()
+$$
+
+
+RAG-Token Model，每个检索到的document生成一个token，token加权求和然后再生成下一个token
+$$
+p_{RAG-Token}()
+$$
+
+
+向量数据库
 
 
 
@@ -422,6 +452,31 @@ subworld的核心就是，对于常出现的词不拆分成subworld，而对于�
 
 
 
+# Emebedding
+
+
+
+
+
+# Context Window/Contex Length
+
+![img](assets/joaOSTwtiudkDIRAJu7gS.png)
+
+Context window = input tokens + output tokens
+
+
+
+# Hallucination in LLM
+
+两种幻觉：
+
+1. Faithfulness，对应faithfulness hallucination
+2. Factualness，对应factuality hallucination
+
+
+
+
+
 # 最优化方法
 
 
@@ -431,3 +486,4 @@ subworld的核心就是，对于常出现的词不拆分成subworld，而对于�
 ## AdamW
 
 **L2 Norm与Weight Decay并不等价**
+
