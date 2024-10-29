@@ -96,6 +96,8 @@ TVM中的Tensor Program Abstraction就是TensorIR
 
 
 
+**spatial axis**和**reduce axis**
+
 
 
 对于一些底层的算子库，其输出也是作为输入被传递给算子的。因为对于算子库来说，希望的是上层的框架来统一管理内存，而不是在算子中管理内存。这种方式叫做**destination passing**。
@@ -111,6 +113,12 @@ alias-analysis，非计算图部分能否交换？？？？
 dl_pack()？？？
 
 TVM支持将各种环境下的对应的pack_function注册成为TVM环境函数
+
+
+
+einops python包以及
+
+
 
 
 

@@ -1,5 +1,19 @@
 # TVM
 
+## 1. Installing TVM
+
+
+
+配置TVM依赖于一个配置文件`config.cmake`。
+
+
+
+## 2. TVM构成
+
+
+
+
+
 
 
 
