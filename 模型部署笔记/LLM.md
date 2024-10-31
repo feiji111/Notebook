@@ -78,6 +78,10 @@ batch方面：
 
 
 
+LLM serving注重的两个指标：low latency和high throughput。
+
+
+
 
 
 # FlashAttention
@@ -474,6 +478,10 @@ Context window = input tokens + output tokens
 2. Factualness，对应factuality hallucination
 
 
+
+# LLM面临的Memory Wall，Compute Wall以及Latency Wall
+
+decoding是典型的memory bound过程(当前现在实际在工程落地的过程中，发现了其实还是算子级别的compute bound)。
 
 
 
