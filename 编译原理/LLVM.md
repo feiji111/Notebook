@@ -13,15 +13,17 @@ LLVM最初是Low Level Virtual Machine的缩写，但随着LLVM的发展，其�
 首先是LLVM的组成，LLVM分为核心项目和外部项目，外部项目是一些工具以及库：
 
 - **核心项目：**
-  - **LLVM**
-  - **Clang**
+  - **LLVM**：LLVM Core libraries，与LLVM IR有关的一些核心库。
+  - **Clang**："LLVM native" C/C++/Objective-C compiler
 - **外部项目：**
-  - **Compiler-RT**
-  - **LLDB**
-  - **LLD**
-  - **Clang extra tools**
-  - **polly**
-  - **LIbc++**
+  - **Compiler-RT**：
+  - **LLDB**：调试
+  - **LLD**：linker，相比于GNU linker更加快
+  - **MLIR**：a novel approach to building reusable and extensible compiler infrastructure
+  - **Clang extra tools**：
+  - **polly**：利用多面体编译技术实现的一系列优化方式
+  - **libc++/libc++ ABI**：C++标准库的LLVM实现
+  - ......
 
 
 
@@ -197,7 +199,7 @@ traditional static compiler采用三阶段的设计：
 
 
 
-但这种三阶段的设计模式在过去一直都没有被完整地实现，但还是有三种比较成功的案例：
+但这种三阶段的设计模式在过去一直都没有被完整地实现(**以GCC为例，传统 GCC 的前端直接对应于后端**)，但还是有三种比较成功的案例：
 
 - **Java and .NET virtual machine**
 - **translate the input source to C code and send it through existing C compilers**
@@ -345,7 +347,7 @@ Clang如果要生成IR，需要增加一个`-emit-llvm`参数，但是这个参�
 
 # 5. LLVM Tools and Design
 
-LLVM的设计哲学之一：**everything is a library**。相当大一部分的LLVM代码是可以重用的，
+**LLVM的设计哲学之一：everything is a library。**相当大一部分的LLVM代码是可以重用的，
 
 ![image-20240419152800050](assets/image-20240419152800050.png)
 
@@ -360,7 +362,7 @@ LLVM的设计哲学之一：**everything is a library**。相当大一部分的L
 
 ![image-20240421142840243](assets/image-20240421142840243.png)
 
-`llc`这个工具就是利用到了`libLLVMCodeGen`库实现其部分功能而opt这个工具利用`libLLVMipa`库实现其功能。那么对于Clang来说，只需要链接`libLLVMCodeGen`以及`libLLVMCodeGen`就可以实现**opt**与**llc**的功能。而事实上，Clang能够完成整个编译过程中的每一步，为此Clang需要链接非常多的库，这也是为什么Clang的可执行文件非常大。
+`llc`这个工具就是利用到了`libLLVMCodeGen`库实现其部分功能而opt这个工具利用`libLLVMipa`库实现其功能。那么对于Clang来说，只需要链接`libLLVMCodeGen`以及`libLLVMCodeGen`就可以实现**opt**与**llc**的功能。**而事实上，Clang能够完成整个编译过程中的每一步，为此Clang需要链接非常多的库，这也是为什么Clang的可执行文件非常大。**
 
 
 
