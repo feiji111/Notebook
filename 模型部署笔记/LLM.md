@@ -78,12 +78,6 @@ batch方面：
 
 
 
-LLM serving注重的两个指标：low latency和high throughput。
-
-
-
-
-
 # FlashAttention
 
 FlashAttention原文涉及到非常多的算法复杂度的表示，这里先稍微总结一下[算法的复杂度表示]()，便于后面理解与分析FlashAttention的复杂度。
@@ -202,7 +196,7 @@ $$
 $$
 大小的KV cache来存储。
 
-
+每一层transformer都有自己的KV-Cache。
 
 显存将会是一个长期的bottleneck。
 
@@ -346,7 +340,7 @@ Flamingo与Vicuna
 
 
 
-# RAG与Long Context
+# RAG
 
 RAG的开山之作[Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks]()
 
@@ -494,4 +488,89 @@ decoding是典型的memory bound过程(当前现在实际在工程落地的过�
 ## AdamW
 
 **L2 Norm与Weight Decay并不等价**
+
+
+
+# Encoder-Only/Decoder-Only/Encoder-Decoder
+
+三种大模型架构都有各自的代表工作：
+
+1. Encoder-Only(autoencoder)：BERT
+2. Decoder-Only(autoregressive)：GPT
+3. Encoder-Decoder：T5，BART **T5: This form of masking is appropriate when attending over a "prefix", i.e. some context provided to the model that is later used when making predictions**
+4. Prefix LM
+5. Permuted Language Model(PLM)：XLNet
+
+
+
+<img src="assets/image-20241104161731663.png" alt="image-20241104161731663" style="zoom: 50%;" />
+
+从T5的结论来看，L层的encoder-decoder结构和L层的decoder-only(language model)结构的计算量是相同的，因为decoder-only结构需要把输入和输出并起来训练，而encoder-decoder结构不需要。
+
+
+
+
+
+当然，这里用模型结构来表达不足够确切，因为除了模型结构外，一般还包含自监督的学习方法，常见的学习方法包括AutoEncoding(简称AE)和AutoRegressive(简称AR)。AE即我们常说的双向语言模型，而AR则代表从左到右的单向语言模型。
+
+
+
+
+
+几种结构的比较：
+
+<img src="assets/image-20241104202055787.png" alt="image-20241104202055787" style="zoom: 50%;" />
+
+
+
+# Long Context
+
+首先一个普遍的事实是：如果我们直接训练2k/4k长度的模型，然后在推理的时候设定8k或者16k窗口，那么PPL会急剧上升，导致模型直接讲不了人话，原因之一在之前讲RoPE的时候也有提到，对于没有训练过的**位置编码**，模型不能很好地处理。
+
+
+
+**extrapolation**：外推就是指短文本上训练，长文本上推理。
+
+
+
+1. **直接训练(具备原生的Long Context能力)**，但是直接训练的训练成本高
+2. **微调方案**，分两阶段，第一阶段用2k或者4k训练一个基础模型，等到模型把文本内容和短位置关系都学好之后，再来用相比第一阶段小的数据量优化在长上下文情况下的效果。
+
+
+
+- 位置编码
+  - PI
+  - NTK
+  - YaRN
+- 模型结构
+  - Efficient Attention：window attention
+
+
+
+
+
+**位置编码**
+
+RoPE是常用的个PE方法，最早由Roformer提出。RoPE本身extrapolation的性质不是特别好。
+
+<img src="assets/image-20241106130437817.png" alt="image-20241106130437817" style="zoom: 50%;" />
+
+
+
+
+
+较短的预训练模型(2k、4k)应用在长上下文会因为训练和推理的两个不一致导致效果下降
+
+- 推理时用到了没训练过的位置编码
+- 推理时注意力机制所处理的token数量远超训练时的数量，导致注意力机制的崩坏
+
+
+
+# MHA/MQA/
+
+
+
+MHA(multi-head attention)，最早的transformer实现，不多赘述。
+
+MQA(multi-query attention)，出自**Fast Transformer Decoding: One Write-Head is All You Need**，谷歌的Noam Shazeer的工作。
 
