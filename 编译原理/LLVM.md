@@ -347,7 +347,26 @@ Clang如果要生成IR，需要增加一个`-emit-llvm`参数，但是这个参�
 
 # 5. LLVM Tools and Design
 
-**LLVM的设计哲学之一：everything is a library。**相当大一部分的LLVM代码是可以重用的，
+**LLVM的设计哲学之一：everything is a library。**相当大一部分的LLVM代码是可以重用的。
+
+LLVM IR采用了SSA的形式：
+
+1. 代码以three-address instructions组织
+2. 有无限数量的寄存器
+
+但除了LLVM IR之外，对于一个被编译的程序，LLVM还有许多其它的中间表示，在不同的阶段被使用：
+
+1. AST
+2. DAG
+3. MCModule
+
+
+
+LLVM IR用以表示驻留内存的程序，并且可以存储到磁盘。IR能够存储到磁盘能带来许多优势：
+
+- 终生程序优化
+- 过程间优化
+- 链接时优化
 
 ![image-20240419152800050](assets/image-20240419152800050.png)
 
@@ -358,7 +377,7 @@ Clang如果要生成IR，需要增加一个`-emit-llvm`参数，但是这个参�
 
 
 
-因此像Clang这样的compiler driver，就通过链接其它编译阶段用到的libraries，从而能够调用它们的功能完成整个编译阶段（这也是LLVM的设计哲学之一尽可能的代码复用）。
+因此像Clang这样的compiler driver，就通过链接其它编译阶段用到的libraries，从而能够调用它们的功能完成整个编译阶段（**这也是LLVM的设计哲学之一尽可能的代码复用**）。
 
 ![image-20240421142840243](assets/image-20240421142840243.png)
 
