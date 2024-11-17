@@ -20,7 +20,7 @@ LLVM最初是Low Level Virtual Machine的缩写，但随着LLVM的发展，其�
   - **LLDB**：调试
   - **LLD**：linker，相比于GNU linker更加快
   - **MLIR**：a novel approach to building reusable and extensible compiler infrastructure
-  - **Clang extra tools**：
+  - **Clang extra tools**：clangd，clang-tidy，clang-include-fixer等
   - **polly**：利用多面体编译技术实现的一系列优化方式
   - **libc++/libc++ ABI**：C++标准库的LLVM实现
   - ......
@@ -316,8 +316,8 @@ Clang如果要生成IR，需要增加一个`-emit-llvm`参数，但是这个参�
 不论是.bc还是.ll文件，存储的都是LLVM IR，只不过是IR不同的形式，LLVM IR总的来说有三种表现形式，三种形式是等价的：
 
 - **in-memory compiler IR**
-- **on-disk bitcode representation(也就是.bc文件)**
-- **human readable assembly language representation(也就是.ll文件)**
+- **on-disk bitcode representation(也就是.bc文件，也叫做LLVM bitcode file)**
+- **human readable assembly language representation(也就是.ll文件，也叫做LLVM assembly file)**
 
 但不论什么形式，LLVM IR采用的都是SSA(Static single assignment form)表示作为IR。上面三种不同的形式，有各自的优势
 
@@ -372,16 +372,18 @@ LLVM IR用以表示驻留内存的程序，并且可以存储到磁盘。IR能�
 
 这些不同的编译阶段之间的交互可以以以下两种方式进行：
 
-- **In memory**
-- **Through files**
+- **In memory**：这种方式是通过compiler driver(LLVM中是Clang)实现。Clang链接到LLVM不同组件所依赖的库，从而实现这些功能。然后通过内存中的一些数据结构实现整个编译流。
+- **Through files**：这种方式就是单独使用某一个组件，从而产生相应的on-disk文件。然后用户再指定这个文件作为下一个阶段的输出。
 
 
 
-因此像Clang这样的compiler driver，就通过链接其它编译阶段用到的libraries，从而能够调用它们的功能完成整个编译阶段（**这也是LLVM的设计哲学之一尽可能的代码复用**）。
+因此像Clang这样的compiler driver，就通过链接其它编译阶段用到的libraries，从而能够调用它们的功能完成整个编译阶段（**这也是LLVM的设计哲学之一尽可能的代码复用，也就是通过libraries实现复用**）。
+
+
 
 ![image-20240421142840243](assets/image-20240421142840243.png)
 
-`llc`这个工具就是利用到了`libLLVMCodeGen`库实现其部分功能而opt这个工具利用`libLLVMipa`库实现其功能。那么对于Clang来说，只需要链接`libLLVMCodeGen`以及`libLLVMCodeGen`就可以实现**opt**与**llc**的功能。**而事实上，Clang能够完成整个编译过程中的每一步，为此Clang需要链接非常多的库，这也是为什么Clang的可执行文件非常大。**
+`llc`这个工具就是利用到了`libLLVMCodeGen`库实现其部分功能而opt这个工具利用`libLLVMipa`库实现其功能。那么对于Clang来说，只需要链接`libLLVMCodeGen`以及`libLLVMCodeGen`就可以实现**opt**与**llc**的功能。**而事实上，Clang能够完成整个编译过程中的每一步，为此Clang需要链接非常多的库，这也是为什么静态链接情况下Clang的可执行文件非常大。**
 
 
 
@@ -414,29 +416,39 @@ InstalledDir: /usr/bin
  "/usr/bin/ld" "-pie" "-z" "relro" "--hash-style=gnu" "--build-id" "--eh-frame-hdr" "-m" "elf_x86_64" "-dynamic-linker" "/lib64/ld-linux-x86-64.so.2" "-o" "hello" "/lib/x86_64-linux-gnu/Scrt1.o" "/lib/x86_64-linux-gnu/crti.o" "/usr/bin/../lib/gcc/x86_64-linux-gnu/12/crtbeginS.o" "-L/usr/bin/../lib/gcc/x86_64-linux-gnu/12" "-L/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../lib64" "-L/lib/x86_64-linux-gnu" "-L/lib/../lib64" "-L/usr/lib/x86_64-linux-gnu" "-L/usr/lib/../lib64" "-L/usr/lib/llvm-14/bin/../lib" "-L/lib" "-L/usr/lib" "/tmp/hello-438d8f.o" "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed" "-lc" "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed" "/usr/bin/../lib/gcc/x86_64-linux-gnu/12/crtendS.o" "/lib/x86_64-linux-gnu/crtn.o"
 ```
 
+首先通过`clang -cc1`生成object file，然后通过链接器(ld/lld)生成executable file。
 
 
-注意-`cc1`这个选项，这个选项表明Clang当前使用的是`compiler mode`而不是`compiler-driver mode`。
+
+注意`-cc1`这个选项，这个选项表明Clang当前使用的是`compiler mode`而不是`compiler-driver mode`。
 
 然后`clang -cc1`由于链接了IR generation, the code generator for the target machine和assembler libraries，因此`clang -cc1`会调用其它库。
 
 
 
+
+
 ## 5.2 Standalone tools
 
-就是上面讨论的`llc`，`opt`等各种LLVM中的工具，不再赘述。
+就是上面讨论的`llc`，`opt`等各种LLVM中的工具：
+
+1. `opt` 
+1. `llc`
 
 
 
 ## 5.3 LLVM internal design
 
-LLVM将整个编译的流程，解耦成一个个阶段，由不同工具负责。这种实现方式是通过将不同的LLVM组件拆分成多个libraries。
+LLVM将整个编译的流程，解耦成一个个阶段，由不同工具负责。这种实现方式是通过将不同的LLVM组件拆分成多个libraries(**在LLVM中，components就是libraries**)。
 
 ```
 In order to decouple the compiler into several tools, the LLVM design typically enforces component interaction to happen at a high level of abstraction. It segregates different components into separate libraries; it is written in C++ using object-oriented paradigms and a pluggable pass interface is available, allowing easy integration of transformations and optimizations throughout the compilation pipeline.
 ```
 
-关于**pluggable pass interface**，看[这里]()
+LLVM的内部设计的两大特点：
+
+1. 利用C++面向对象特性
+2. pluggable pass interface，**pluggable pass interface**使得用户可以自行编写transformation以及optimization
 
 
 
@@ -462,7 +474,7 @@ Amongst other things, LLVM is a toolkit for building compilers, linkers, runtime
 
 
 
-一个实际的依赖关系
+一个实际存在的依赖关系
 
 ![image-20240426103736747](assets/image-20240426103736747.png)
 
@@ -495,6 +507,12 @@ class MipsTargetMachine : public LLVMTargetMachine {
 
 
 ## 5.6 Demonstrating the pluggable pass interface
+
+与LLVM pass有关的docs：
+
+1. [Writing an LLVM Pass (legacy PM version)](https://llvm.org/docs/WritingAnLLVMPass.html#introduction-what-is-a-pass)
+2. [Writing an LLVM Pass](https://llvm.org/docs/WritingAnLLVMNewPMPass.html)
+3. [Using the New Pass Manager](https://llvm.org/docs/NewPassManager.html)
 
 LLVM doc [Writing an LLVM Pass (legacy PM version)](https://llvm.org/docs/WritingAnLLVMPass.html#introduction-what-is-a-pass)这一部分介绍了pass。
 
@@ -547,7 +565,7 @@ LLVM的pass framework允许编写自己的custom pass。
 
 Clang有多种含义：
 
-- Clang可以是前端frontend(通过Clang library实现)
+- Clang可以是前端frontend(通过Clang library实现)，是LLVM中C，C++，Objective-C的前端
 - Clang可以是compiler driver
 - Clang可以是一个单独的compiler(`clang -cc1`)
 
@@ -561,6 +579,10 @@ Clang有多种含义：
 clang -Xclang -ast-dump hello.c
 clang -cc1 -ast-dump hello.c
 ```
+
+**clang作为一个compiler driver时的一个重要作用是初始化所有的编译所需要的参数。**
+
+
 
 ## 6.2 Frontend actions
 
