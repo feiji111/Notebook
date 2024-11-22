@@ -185,7 +185,7 @@ FFN_{SwiGLU}(x,W,V,W_{2}) = (Swish_{1}(xW) \odot xV)W_{2}
 $$
 LLAMA2 7B的FFN层的hidden dimension是11008，这个隐藏层维度是通过$\frac{2}{3} 4d$然后取最近的256的倍数得到的，也就是前面的11008。
 
-LLAMA采用的RMSNorm也有参数每一层要做两次RMSNorm，每一个RMSNorm的参数量为$d_{model}$
+LLAMA采用的RMSNorm也有参数。每一层要做两次RMSNorm，每一个RMSNorm的参数量为$d_{model}$
 
 LLAMA2 7B的输出**de_embedding并不与embedding层共享参数**，因此还需要加上这一部分。
 

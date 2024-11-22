@@ -23,6 +23,7 @@ LLVM最初是Low Level Virtual Machine的缩写，但随着LLVM的发展，其�
   - **Clang extra tools**：clangd，clang-tidy，clang-include-fixer等
   - **polly**：利用多面体编译技术实现的一系列优化方式
   - **libc++/libc++ ABI**：C++标准库的LLVM实现
+  - **mlir**
   - ......
 
 
@@ -561,13 +562,15 @@ LLVM的pass framework允许编写自己的custom pass。
 
 # 6. The Frontend
 
+Since programming languages have distinct syntax and semantic domains, frontends usually handle either a single language or a group of similar ones.
+
 ## 6.1 Clang
 
 Clang有多种含义：
 
 - Clang可以是前端frontend(通过Clang library实现)，是LLVM中C，C++，Objective-C的前端
 - Clang可以是compiler driver
-- Clang可以是一个单独的compiler(`clang -cc1`)
+- Clang可以是一个单独的compiler(`clang -cc1`)，但是实际上，clang -cc1不仅仅链接到了Clang libraries，并且还链接到了LLVM libraries，意味着clang -cc1不仅能够实现前端的功能，还可以实现中/后端的功能，甚至包括一个assembler的功能
 
 
 
@@ -579,6 +582,8 @@ Clang有多种含义：
 clang -Xclang -ast-dump hello.c
 clang -cc1 -ast-dump hello.c
 ```
+
+当clang作为一个compiler driver时，可以通过-X参数将参数直接传递给具体的一个组件。
 
 **clang作为一个compiler driver时的一个重要作用是初始化所有的编译所需要的参数。**
 
@@ -722,7 +727,9 @@ enum ActionKind {
 
 ## 6.3 Libraries
 
-这一节将Clang看作是一个compiler frontend来讨论其模块化的设计以及组成其的libraries。
+**这一节将Clang看作是一个compiler frontend来讨论其模块化的设计以及组成其的libraries。**
+
+
 
 `libclang`是最主要的一个库，提供了C API，包括了其它几个Clang libraries，这些单独的libraries也可以单独被链接到自己的程序中。
 
@@ -751,7 +758,7 @@ To avoid namespace pollution, data types are prefixed with "CX" and functions ar
 
 `libclang`的头文件位于源代码的`clang/include/clang-c`下，而其中的`Index.h`是主入口。
 
-
+与LLVM不同，LLVM的库可以通过llvm-config工具来帮助链接，但是Clang的库并没有类似的工具，需要手动链接。
 
 ## 6.4 Clang diagnostics
 
@@ -768,6 +775,8 @@ They are the messages that a compiler gives to the user to signal errors, warnin
 
 
 可以引入自己的diagnostics set，通过添加一个新的**TableGen definitions**的.td文件来实现。
+
+**这里就体现了metaprogramming的思想，通过一些描述文件来自定义LLVM后端的行为。**
 
 ### 6.4.1 TableGen
 

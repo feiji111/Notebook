@@ -498,7 +498,7 @@ decoding是典型的memory bound过程(当前现在实际在工程落地的过�
 1. Encoder-Only(autoencoder)：BERT
 2. Decoder-Only(autoregressive)：GPT
 3. Encoder-Decoder：T5，BART **T5: This form of masking is appropriate when attending over a "prefix", i.e. some context provided to the model that is later used when making predictions**
-4. Prefix LM
+4. PrefixLM： GLM，UniLM
 5. Permuted Language Model(PLM)：XLNet
 
 
@@ -525,31 +525,80 @@ decoding是典型的memory bound过程(当前现在实际在工程落地的过�
 
 # Long Context
 
+参考：
+
+1. [LLM长上下文问题](https://www.linsight.cn/c4da56c0.html)
+2. [聊聊拉长LLaMA的一些经验](https://blog.csdn.net/CompHub/article/details/132031711)
+3. [再谈Long-Context LLM](https://zhuanlan.zhihu.com/p/660660723)
+
 首先一个普遍的事实是：如果我们直接训练2k/4k长度的模型，然后在推理的时候设定8k或者16k窗口，那么PPL会急剧上升，导致模型直接讲不了人话，原因之一在之前讲RoPE的时候也有提到，对于没有训练过的**位置编码**，模型不能很好地处理。
 
+除了性能方面的影响之外，长上下文导致的另一个问题就是计算复杂度以及显存占用的急剧上升。
 
+
+
+RoPE这个位置编码方法extrapolation的性质不是特别好，相比于RoPE，ALiBi位置编码的外推性能更加好。
 
 **extrapolation**：外推就是指短文本上训练，长文本上推理。
 
 
 
+拉长LLM有一下几种方案：
+
 1. **直接训练(具备原生的Long Context能力)**，但是直接训练的训练成本高
-2. **微调方案**，分两阶段，第一阶段用2k或者4k训练一个基础模型，等到模型把文本内容和短位置关系都学好之后，再来用相比第一阶段小的数据量优化在长上下文情况下的效果。
+2. **采用外推**，一般来说性能差
+3. **微调方案**，分两阶段，第一阶段用2k或者4k训练一个基础模型，等到模型把文本内容和短位置关系都学好之后，再来用相比第一阶段小的数据量优化在长上下文情况下的效果。
+4. **预训练采用短文本和长文本共同训练**，即预训练开始阶段采用短文本，预训练的最后采用长文本(QWen，MPT)。
+5. **在位置编码方面改进**
+6. **模型结构的改进**
+
+这些方案总结来说，就是**提高长度外推能力+优化长文本时的推理速度+降低长文本内存消耗**。
 
 
 
-- 位置编码
-  - PI
-  - NTK
-  - YaRN
-- 模型结构
-  - Efficient Attention：window attention
+## 模型结构改进
+
+这一部分的工作主要有对transformer结构的改进，以及sparse attention等工作。
+
+### 1. MHA/MQA/GQA/MLA
+
+后面在这里[详细介绍了](#MHA/MQA/GQA/MLA)这一部分的内容
 
 
 
+### 2. sliding window attention
+
+Longformer是最早提出SWA的，而后来的Mixtral将其发扬光大。
+
+Longformer本身结合了SWA的local attention以及一个global attention，longformer认为这两种attention都非常有必要，并且通过消融实验证明
+
+```
+the local attention is primarily used to build contextual representations, while the global attention allows Longformer to build full sequence representations for prediction.
+```
+
+但是longformer最初的架构是encoder与encoder-decoder架构。
+
+![image-20241121192522131](./assets/image-20241121192522131.png)
 
 
-**位置编码**
+
+### 3. hash-based attention
+
+
+
+### 4. dilated attention
+
+
+
+### 5. 总结
+
+总的来说，efficient attention可以分为：
+
+1. 
+
+
+
+## 位置编码
 
 RoPE是常用的个PE方法，最早由Roformer提出。RoPE本身extrapolation的性质不是特别好。
 
@@ -564,13 +613,143 @@ RoPE是常用的个PE方法，最早由Roformer提出。RoPE本身extrapolation�
 - 推理时用到了没训练过的位置编码
 - 推理时注意力机制所处理的token数量远超训练时的数量，导致注意力机制的崩坏
 
+这两个问题可以分别通过位置编码和attention score的放缩来缓解。
+
+# MHA/MQA/GQA/MLA
+
+参考：
+
+1. [缓存与效果的极限拉扯：从MHA、MQA、GQA到MLA](https://zhuanlan.zhihu.com/p/700588653)
+2. ###### [[KV Cache优化]🔥MQA/GQA/YOCO/CLA/MLKV笔记: 层内和层间KV Cache共享](https://zhuanlan.zhihu.com/p/697311739)
 
 
-# MHA/MQA/
+
+MHA(multi-head attention)，出自[Attention is all you need](https://arxiv.org/pdf/1706.03762)最早的transformer实现，不多赘述。
+
+后续的MQA、GQA以及MLA都是围绕如何减少KV Cache的大小。
+
+MQA(multi-query attention)，出自[Fast Transformer Decoding: One Write-Head is All You Need](https://arxiv.org/pdf/1911.02150)，谷歌的Noam Shazeer的工作。
+
+GQA(grouped-query attention)，出自[GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints](https://arxiv.org/pdf/2305.13245)
+
+MLA(multi-head latent attention)，由DeepSeek提出[DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model](https://arxiv.org/pdf/2405.04434)
+
+MQA的思想就是让所有attention head共享keys和values。
 
 
 
-MHA(multi-head attention)，最早的transformer实现，不多赘述。
+后续的工作还有微软的YOCO(You Only Cache Once)以及CLA(Cross-Layer Attention)。
 
-MQA(multi-query attention)，出自**Fast Transformer Decoding: One Write-Head is All You Need**，谷歌的Noam Shazeer的工作。
 
+
+首先来看MQA。
+
+
+
+# 困惑度PPL
+
+困惑度是用来衡量语言模型(Causal Language Model)的一个指标。需要明确，困惑的是对于一个句子而言的，一个句子的困惑度计算公式如下：
+$$
+PP(S) = P(w_1w_2 \cdots w_N)^{-\frac{1}{N}}
+$$
+
+
+# Mixtral技术报告
+
+
+
+## 1. Introduction
+
+Mixtral这个系列的模型，基于transformer架构，采用了GQA以及SWA等技术，使得模型兼顾了performance和efficiency。
+
+
+
+## 2. Architecture Details
+
+Mixtral 7B模型的参数如下：
+
+<img src="assets/image-20241121145516040.png" alt="image-20241121145516040" style="zoom:50%;" />
+
+### 2.1 Sliding Window Attention(SWA)
+
+![image-20241121145920554](assets/image-20241121145920554.png)
+
+vanilla attention的实现，计算复杂度与序列长度的二次方成正比；显存消耗与序列长度成线性关系。
+
+在Mixtral中，采用了SWA，每一个token只能访问到上一层的**W**个token。但是当有k层时，最后一层的最后一个token实际上可以访问到$k \times W$个token的信息。
+
+因此对于Mixtral 7B的4096的大小来说，context length实际上能够达到131K。但对应的需要对FlashAttenion以及xFormer中的算子做修改。
+
+与CNN中的卷积和类似，通过卷积，感受野会逐层扩大一圈
+
+<img src="./assets/v2-8df33c09f40acb3265831e05eba27fd9_1440w.jpg" alt="img" style="zoom:50%;" />
+
+只不过相比于CNN，LLM中的窗口递增的方向是单向的，只能够向前递增。
+
+
+
+### 2.2 Rolling Buffer Cache
+
+上面的SWA固定的窗口大小，这就使得Mixtral中KV-Cache的也可以固定下来。超出窗口的KV-Cache就不需要被缓存了，从而保证训练与推理的一致。Mixtral中采用了rolling buffer cache技术。
+
+具体的实现方案是将KV-Cache的大小固定为window的大小，然后通过对token位置模上窗口大小**W**来决定KV-Cache中哪个K-V需要被替换。
+
+![image-20241121154024251](assets/image-20241121154024251.png)
+
+
+
+### 2.3 Pre-fill and Chunking
+
+在推理的pre-fill阶段，需要生成prompt的KV填充到KV-Cache中。而Mixtral在prompt非常长的时候将其切块(chunking)处理，而块的大小就是window size。
+
+![image-20241121154444726](assets/image-20241121154444726.png)
+
+```
+比如窗口大小为4，system prompt大小为9时，就可以把system prompt的kv缓存切成 [4,4,1] 三块。
+
+第一块由于和当前的输入距离超过了一个window的大小，所以是完全看不见的，对应的attention mask全为0，因此可以完全忽略。
+
+第二块的attention mask则是一个上三角矩阵，当前的输入需要用到这部分信息。
+
+第三块是一个下三角矩阵（的左边部分），包含了当前的输入在内。
+
+在推理的时候，我们只需要用到第二块和第三块的内容，这就节省了缓存的操作。
+
+而且无论prompt有多长，只要我们按窗口大小分块，一定只会用到最后两块。
+```
+
+结果就如上图所示，最终只会用到最后两个chunk。
+
+
+
+## 3. Results
+
+这部分暂时略过，用到的时候再补充。
+
+
+
+# QWen技术报告
+
+
+
+
+
+# 开源LLM
+
+
+
+1. LLaMA
+2. Vicuna
+3. Alpaca
+4. Bloom
+5. MPT
+6. GLM
+7. QWen
+8. falcon
+9. phi
+10. T5
+11. Mixtral
+12. InternLM
+13. Deepseek
+14. OPT
+15. miniGPT
