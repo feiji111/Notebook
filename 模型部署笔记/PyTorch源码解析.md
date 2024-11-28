@@ -263,3 +263,43 @@ torch的模型文件后缀有.pkl，.pt，.pth，.pth.tar多种格式，对于�
 
 ## 3.12 PyTorch中的广播机制
 
+
+
+## 3.13 Dataset与DataLoader
+
+[Algorithm Researcher explains how Pytorch Datasets and DataLoaders work](https://www.youtube.com/watch?v=Sj-gIb0QiRM)
+
+
+
+这里涉及到两个类`Dataset`以及`DataLoader`。
+
+`Dataset`类的作用是构建起索引到数据的映射，`DataLoader`负责以特定的方式从数据集中迭代的产生 一个个batch的样本集合。在enumerate过程中实际上是dataloader按照其参数sampler规定的策略调用了其dataset的getitem方法。
+
+
+
+继承`Dataset`需要实现两个函数`__getitem__`与`__len__`。
+
+`__getitem__`根据索引从硬盘中读取并返回数据，而`__len__`返回整个数据集大小。
+
+<img src="./assets/image-20241128230040744.png" alt="image-20241128230040744" style="zoom: 33%;" />
+
+`Dataloader`的构建需要传入一个`Dataset`类型的变量。dataloader就会调用dataset的`__getitem__`与`__len__`。
+
+dataloader会调用`__len__`，结合batch的大小从而得到对于传入的数据集需要构造多少个batch(也就是iteration的个数)；dataloader会调用`__getitem__`从而构造出一个batch。
+
+dataloader可以通过多进程的方式加速数据的加载。通过多个worker进程，每个worker进程调用`__getitem__`并行读取数据，将得到的数据放入到一个队列中。然后dataloder再调用`collate_fn`从这个队列中读取数据构建batch。
+
+<img src="./assets/image-20241128230134002.png" alt="image-20241128230134002" style="zoom: 33%;" />
+
+
+
+上面是对于Dataset以及DataLoader类工作原理的一个简单介绍，下面详细讲一下。
+
+```python
+torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=None, sampler=None, batch_sampler=None, num_workers=0, collate_fn=None, pin_memory=False, drop_last=False, timeout=0, worker_init_fn=None, multiprocessing_context=None, generator=None, *, prefetch_factor=None, persistent_workers=False, pin_memory_device='')
+```
+
+
+
+
+
