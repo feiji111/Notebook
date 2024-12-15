@@ -68,3 +68,9 @@ A wiki is a form of hypertext publication on the internet which is collaborative
 
 
 
+# 6. Open Source License
+
+
+
+<img src="./assets/1920px-Open-source-license-chart.svg.png" alt="A pie chart displays the most commonly used open source license as Apache at 30%, MIT at 26%, GPL at 18%, BSD at 8%, LGPL at 3%, MPL at 2%, and remaining 13% as licenses with below 1% market share each." style="zoom: 25%;" />
+

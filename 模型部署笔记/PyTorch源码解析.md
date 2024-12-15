@@ -6,13 +6,12 @@
 
 在分析源码之前，就必须能够成功从源码编译PyTorch。在编译PyTorch时，有非常多的选项可以选择，理清楚PyTorch的编译过程可以更好地了解PyTorch与其它组件之间的联系。
 
-
-
-
-
-
-
 # 2. PyTorch的组成模块
+
+现代的深度学习框架(PyTorch和Tensorflow)，都是两层架构
+
+1. python前端，提供更高层次更好用的API
+2. C++后端，执行具体的计算
 
 
 
@@ -298,8 +297,6 @@ dataloader可以通过多进程的方式加速数据的加载。通过多个work
 ```python
 torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=None, sampler=None, batch_sampler=None, num_workers=0, collate_fn=None, pin_memory=False, drop_last=False, timeout=0, worker_init_fn=None, multiprocessing_context=None, generator=None, *, prefetch_factor=None, persistent_workers=False, pin_memory_device='')
 ```
-
-
 
 
 
