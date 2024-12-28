@@ -2,6 +2,8 @@
 
 
 
+**PyTorch 背后的理念是，它存在于CUDA、ROCm 或 OneAPI 等框架之上，并根据系统中安装的硬件简单地调用适当的后端。理论上，这意味着为 PyTorch 编写的代码应该可以在几乎任何支持它的东西上运行。**
+
 # 1. Installation From Source
 
 在分析源码之前，就必须能够成功从源码编译PyTorch。在编译PyTorch时，有非常多的选项可以选择，理清楚PyTorch的编译过程可以更好地了解PyTorch与其它组件之间的联系。
@@ -299,4 +301,12 @@ torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=None, sampler=None, b
 ```
 
 
+
+## 3.14 PyTorch中的混合精度训练
+
+最近改代码碰到了混合精度训练，在这里记录一下。
+
+混合精度训练最经典的是英伟达和百度的这篇论文[MIXED PRECISION TRAINING]()。
+
+混合精度训练混合的是FP16和FP32两种精度。FP16的动态范围要远远小于FP32的动态范围，因此在很容易出现上溢出和下溢出两种情况(这一部分可以参考[这里]())
 

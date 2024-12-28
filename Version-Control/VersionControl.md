@@ -65,10 +65,7 @@ CVS，Subversion以及Perforce采用的是delta-based version control，即记�
 而git记录的，是文件系统的一个快照(snapshot)。
 
 ```
-With Git, every time you commit, or save the state of your project, Git basically takes a picture of what all your files look like at that moment and stores a reference to that snapshot. To be efficient, if files have not changed, Git doesn’t store the file again,
-just a link to the previous identical file it has already stored.
-This makes Git more like a mini filesystem with some incredibly powerful tools built on
-top of it, rather than simply a VCS.
+With Git, every time you commit, or save the state of your project, Git basically takes a picture of what all your files look like at that moment and stores a reference to that snapshot. To be efficient, if files have not changed, Git doesn’t store the file again, just a link to the previous identical file it has already stored. This makes Git more like a mini filesystem with some incredibly powerful tools built on top of it, rather than simply a VCS.
 ```
 
 在git的眼中，这些历史数据就被串成了stream of snapshots。
@@ -77,23 +74,21 @@ top of it, rather than simply a VCS.
 
 <img src="assets/image-20240814140447809.png" alt="image-20240814140447809" style="zoom:80%;" />
 
+所以git的版本控制机制就是通过快照(snapshot) + 链接(link)
+
 ### 2.2.2 Nearly Every Operation Is Local
 
-
+git会把整个项目的历史记录完整地存储在本地磁盘上，所以绝大多数操作都不需要网络通信。
 
 ### 2.2.3 Git Has Integrity
 
-在Git中，几乎
-
-
-
-git采用SHA-1
+git会通过SHA-1的hash来对保存的内容(也就是上面提到的snapshot)进行checksum，并且通过这个checksum来访问对应的内容。这个SHA-1是通过文件内容或者文件目录结构算出来的。
 
 
 
 ### 2.2.4 Git Generally Only Adds Data
 
-git中的几乎所有操作都只会向Git的database中添加数据。这就意味着git中的很多操作都是可以撤销的。
+git中的几乎所有操作都只会向Git的database中添加数据(和docker构建image的时候挺像)。这就意味着git中的很多操作都是可以撤销的。
 
 
 
@@ -101,10 +96,20 @@ git中的几乎所有操作都只会向Git的database中添加数据。这就意
 
 git中，文件有三种状态：modified，staged，committed
 
-这三种状态就分别对应着一个git项目中的三个部分：the working tree，the staging area，the
-Git directory
+这三种状态就分别对应着一个git项目中的三个部分：the working tree，the staging area，the Git directory
 
 <img src="assets/image-20240814204600565.png" alt="image-20240814204600565" style="zoom:50%;" />
+
+```
+The working tree is a single checkout of one version of the project. These files are pulled out of the
+compressed database in the Git directory and placed on disk for you to use or modify.
+The staging area is a file, generally contained in your Git directory, that stores information about
+what will go into your next commit. Its technical name in Git parlance is the “index”, but the phrase
+“staging area” works just as well.
+The Git directory is where Git stores the metadata and object database for your project. This is the
+most important part of Git, and it is what is copied when you clone a repository from another
+computer.
+```
 
 
 
@@ -160,6 +165,10 @@ git中，文件有几种状态：
 
 
 ## 1.2 git workflow
+
+git clone会创建一个.git目录，然后将repository中的数据都拉到.git目录中，然后从中checkout出一个最新版本的working copy。所以git clone实际上是copy .git这个目录。
+
+而working tree中的内容是git clone命令从.git目录下checkout出来的。
 
 
 
