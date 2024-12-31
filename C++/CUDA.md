@@ -513,5 +513,5 @@ A CUDA context is analogous to a CPU process. All resources and actions performe
 
 
 
-## Pin memory
+## Pinned memory
 

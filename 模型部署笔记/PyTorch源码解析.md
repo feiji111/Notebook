@@ -302,6 +302,14 @@ torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=None, sampler=None, b
 
 
 
+pin_memory和non_blocking
+
+pin_memory在CUDA中已经有了介绍。
+
+
+
+
+
 ## 3.14 PyTorch中的混合精度训练
 
 最近改代码碰到了混合精度训练，在这里记录一下。
