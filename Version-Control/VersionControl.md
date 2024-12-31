@@ -96,7 +96,7 @@ git中的几乎所有操作都只会向Git的database中添加数据(和docker�
 
 git中，文件有三种状态：modified，staged，committed
 
-这三种状态就分别对应着一个git项目中的三个部分：the working tree，the staging area，the Git directory
+这三种状态就分别对应着一个git项目中的三个部分：the working tree，the staging area(也叫做**Index**)，the Git directory
 
 <img src="assets/image-20240814204600565.png" alt="image-20240814204600565" style="zoom:50%;" />
 
@@ -169,6 +169,16 @@ git中，文件有几种状态：
 git clone会创建一个.git目录，然后将repository中的数据都拉到.git目录中，然后从中checkout出一个最新版本的working copy。所以git clone实际上是copy .git这个目录。
 
 而working tree中的内容是git clone命令从.git目录下checkout出来的。
+
+
+
+
+
+## git branch
+
+
+
+## git的四类存储对象：blob，tree，commit和tag
 
 
 

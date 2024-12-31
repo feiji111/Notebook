@@ -208,7 +208,7 @@ CUDA的源代码中既包含了host code，也包含了device code。
 
 1. 分离源码中的host code与device code
 2. 将device code编译成assembly form(PTX code)以及binary form(cubin object)
-3. 修改host code，将`<<<...>>>`替换成CUDA Runtime function calls，用以从PTX code和cubin object中加载和启动编译好了的kernel（从这里可以看出，kernel被编译后是存放在PTX code和cubin object之中的，host code调用时，需要PTX code和cubin object中加载并且执行编译好的kernel）。
+3. 修改host code，将`<<<...>>>`替换成CUDA Runtime function calls，用以从PTX code和cubin object中加载和启动编译好了的kernel（从这里可以看出，**kernel被编译后是存放在PTX code和cubin object之中的，host code调用时，需要PTX code和cubin object中加载并且执行编译好的kernel**）。
 4. 修改host code之后，输出的是C++代码，可以通过C++编译器被编译成object code；或者直接由`nvcc`来调用C++的编译器，直接输出object code。
 
 
@@ -506,4 +506,12 @@ A CUDA context is analogous to a CPU process. All resources and actions performe
 # PTX与cuBIN
 
 
+
+
+
+## CUDA steam与event
+
+
+
+## Pin memory
 

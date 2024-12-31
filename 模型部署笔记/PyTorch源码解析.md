@@ -310,3 +310,16 @@ torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=None, sampler=None, b
 
 混合精度训练混合的是FP16和FP32两种精度。FP16的动态范围要远远小于FP32的动态范围，因此在很容易出现上溢出和下溢出两种情况(这一部分可以参考[这里]())
 
+
+
+## 3.15 CUDA graph与torch.compile
+
+在讲CUDA graph之前，需要了解一个CUDA算子(kernel)是如何执行的。
+
+
+
+
+
+
+
+## 3.16 torch.profile
