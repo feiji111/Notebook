@@ -78,6 +78,16 @@ Local Memory --> Shared Memory --> Global Memory
 
 
 
+物理上的内存只有两种，一种是片外的device memory(HBM，GDDR)；另一种就是片内的高速SRAM。
+
+Local memory，global memory，texture memory以及constant memory都是位于device memory上；而shared memory，L1 cache和L2 cache都是位于片内的SRAM上，因此速度更快。
+
+shared memory与L1 cache都位于同一块SRAM，只不过可以配置二者的比例，SM内部共享一块 shared memory和L1 cache；而所有SM共享一个L2 cache。而texture memory以及constant memory都有各自的一块缓存，read-only texture和read-only constant，这两种缓存是每个SM都有一块内部共享。
+
+从可编程的角度来说，L1 cache，L2 cache以及read-only texture和read-only constant都是不可编程的，由硬件自动管理。
+
+
+
 ## 2.4 Heterogeneous Programming
 
 CUDA采用的是**异构**的编程模型。
@@ -515,3 +525,16 @@ A CUDA context is analogous to a CPU process. All resources and actions performe
 
 ## Pinned memory
 
+
+
+## Warp， Warp Scheduler与指令调度/发射
+
+从逻辑视角来看，线程会被分为warp，block，grid等层级；而在物理视角来看，只有core和SM之分。
+
+
+
+一个kernel有一个grid，grid下有若干个block，block下有若干个thread。**实际执行中，block会被划分为若干个warp，每个warp中有32个thread，一个block只能在一个SM上执行，一个SM可以执行多个block，这些block可以来自一个或者不同的grid。**
+
+而在物理视角来看，一个SM下的core也会按照一个warp的大小分为若干个warps。
+
+GPU调度的最小单位是warp。

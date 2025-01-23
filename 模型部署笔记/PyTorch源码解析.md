@@ -326,8 +326,78 @@ pin_memory在CUDA中已经有了介绍。
 
 
 
-
-
-
-
 ## 3.16 torch.profile
+
+
+
+## 3.17 PyTorch中的device(主要针对CUDA设备)
+
+PyTorch中，torch.cuda相当于是CUDA C++的一个python前端。
+
+PyTorch中有一下API用于管理CUDA设备：
+
+1. toch.device类，创建一个设备对象，对象名称可以是str，也可以是str:ordinal用以制定具体的设备编号
+
+1. torch.cuda.device([*torch.device*](https://pytorch.org/docs/stable/tensor_attributes.html#torch.device) *or* [*int*](https://docs.python.org/3/library/functions.html#int))，与torch.device不同，torch.cuda.device()返回的是一个上下文管理器，用以切换设备
+2. torch.cuda.set_device([*torch.device*](https://pytorch.org/docs/stable/tensor_attributes.html#torch.device) *or* [*int*](https://docs.python.org/3/library/functions.html#int))
+3. torch.cuda.current_device()
+4. torch.Tensor.to()
+5. torch.Tensor.cuda()
+
+
+
+## 3.18 动态图机制
+
+PyTorch采用的是动态计算图机制，动态体现在以下两点：
+
+1. 动态图是随着代码计算过程动态构建的
+2. 反向传播结束之后动态图会被销毁
+
+
+
+PyTorch中的计算图是一个有向无环图(DAG)，包括叶子节点，根节点等节点：
+
+1. 
+
+forward和backward都有各自的计算图。
+
+
+
+PyTorch捕获计算图
+
+
+
+
+
+## 3.19 Autograd mechanics
+
+
+
+# 4. 总体架构
+
+<img src="./assets/image-20250104200751064.png" alt="image-20250104200751064" style="zoom:50%;" />
+
+PyTorch也是一个前后端分离的架构，大致执行流程：
+
+1. PyTorch捕获计算图
+2. 将计算图的节点lowering到底层
+3. 通过dispatcher将相应的kernel调用转发到对应的后端
+4. 翻译成机器码并在不同的机器上执行
+
+
+
+在阅读了大量的参考文献之后，我发现了三种能够与我的混合专家模块(以下简称MoE)能够非常好地契合的剪枝模块，分别是TokenPacker，MobileVLM中提出的LDP以及Average Pooling。通过一个路由模块，根据每一张图片的CLS token经过路由模块处理，得到每一个专家的概率，然后交由概率最大的专家处理。目前我设置的视觉侧剪枝后的token个数为144，而原始的ViT的token个数是576。LLaVA训练时间长的一大原因就是因为视觉侧的token个数过多，而通过减少大部分的视觉token，极大加快了LLaVA的训练速度。
+在融合不同的剪枝模块的过程中，不同的剪枝模块剪枝后的序列长度(token个数)是不同的。但是为了保证训练能够以batch为大小进行训练，必须使得每一个剪枝模块输出的序列长度是相同的。经过调研与讨论，我采用了一种非常常用的方案对齐序列长度，通过在序列后面补零来对齐每个序列的长度，同时不会给训练带来负面影响。
+
+
+
+在LLaVA原有基础上，实现了相关的代码，准备好了对应的数据集，按照LLaVA给出的训练知道，进行两阶段的训练。首先进行预训练，训练我的剪枝模块以及路由模块。预训练完毕之后，利用LLaVA给出的SFT数据进行微调，对剪枝模块、路由模块以及LLM进行指令微调。目前的结论是在引入了我所提出的剪枝模块之后，两阶段的训练速度都有非常大的提升。
+在得到最终训练好的模型之后，我在MMEBench这个多模态benchmark对我的算法表现进行评估。未经过剪枝的LLaVA在MME上的得分为1510，而引入了我的剪枝算法后在MME上的的得分为1460，性能略有下降。目前还在寻找改进方案。
+
+
+
+最初计划引入Q-Former这一个剪枝模块作为剪枝专家之一，但是Q-Former需要在大规模的图像-文本对上进行预训练。同时，一些预训练好的Q-Former，由于其输出的token的特征维度与目前我所采用的其它剪枝模块不匹配，如果需要融入需要做对齐。因此暂时没有将Q-Former作为一个剪枝专家加入到我的算法中。
+
+
+
+后续计划通过一个Projector，来讲Q-Former与我的算法的特征维度对齐，从而能够将预训练好的Q-Former加入到我的算法当中。后续计划通过一个Projector，来讲Q-Former与我的算法的特征维度对齐，从而能够将预训练好的Q-Former加入到我的算法当中。后续计划通过一个Projector，来讲Q-Former与我的算法的特征维度对齐，从而能够将预训练好的Q-Former加入到我的算法当中。后续计划通过一个Projector，来讲Q-Former与我的算法的特征维度对齐，从而能够将预训练好的Q-Former加入到我的算法当中。
