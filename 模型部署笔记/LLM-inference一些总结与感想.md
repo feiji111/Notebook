@@ -22,7 +22,9 @@ compute bound 通常只出现在计算大规模矩阵乘法时(Nvidia Tensor Cor
 
 <img src="assets/image-20241102011425808.png" alt="image-20241102011425808" style="zoom:50%;" />
 
-从上表可以看出，对于 FP32 而言，如果我们不进行矩阵乘法，我们的计算能力只能达到 19.5TFLOPS 而不是通常声称的 312TFLOPS（即使是 19.5TFLOPS 也是考虑了 FMA 专用硬件，实际计算能力可能只有 9.75TFLOPS）。
+从上表可以看出，对于 FP32 而
+
+言，如果我们不进行矩阵乘法，我们的计算能力只能达到 19.5TFLOPS 而不是通常声称的 312TFLOPS（即使是 19.5TFLOPS 也是考虑了 FMA 专用硬件，实际计算能力可能只有 9.75TFLOPS）。
 
 
 
