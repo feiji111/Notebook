@@ -529,6 +529,12 @@ A CUDA context is analogous to a CPU process. All resources and actions performe
 
 ## Warp， Warp Scheduler与指令调度/发射
 
+总体来说，Nvidia GPU调度分为三级：
+
+1. Stream scheduler
+2. Thread block scheduler(Giga thread engine)
+3. Warp Scheduler
+
 从逻辑视角来看，线程会被分为warp，block，grid等层级；而在物理视角来看，只有core和SM之分。
 
 

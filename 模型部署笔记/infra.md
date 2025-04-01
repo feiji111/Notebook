@@ -33,7 +33,9 @@ Send packet CA->Netherlands->CA    150,000,000   ns  150,000 µs  150 ms
 
 ## 1.2 NVLink
 
-NVLink点对点的连接。![NVLink in NVIDIA H100 performance chart](assets/hopper-grace-gtc24-charts-aggregate-bandwith-nvlink-at-scale.svg)
+NVLink点对点的连接。
+
+<img src="assets/hopper-grace-gtc24-charts-aggregate-bandwith-nvlink-at-scale.svg" alt="NVLink in NVIDIA H100 performance chart" style="zoom: 25%;" />
 
 NVLink截止目前(2024-10-8)，一共有5代。
 
@@ -125,7 +127,7 @@ HGX-2上的NVSwitch是第一代，有18个端口，其中8个端口各连接一�
 
 每一块SXM规格的A100有12个NVLink端口，可以连接12条NVLink。每块A100用2条NVLink与NVSwitch连接，一共6块NVSwitch，正好吃满12条NVLink。
 
-第二代的NVSwitch有36个NVLink port。连接A100消耗掉16个端口，剩余的20个端口可以连接到另一块A100 HGX上对应的NVSwitch的端口(但实际上貌似并没有向之前V100 HGX-2那样的两块baseboard互联的例子)。
+第二代的NVSwitch有36个NVLink port。连接A100消耗掉16个端口，剩余的20个端口可以连接到另一块A100 HGX上对应的NVSwitch的端口(但实际上貌似并没有x像之前V100 HGX-2那样的两块baseboard互联的例子)。
 
 
 
@@ -145,7 +147,7 @@ A100 HGX正面长这样，正面的接口包括了中间的PCIe接口，用于�
 
 <img src="assets/hUbNYU9WFM9lMmtvzMfegUABzDRxCCbezpa1M4-6qQSj8cwS5QK7zVcGAO5bWTkPWKhUaepQaIo8oIMa9CrtyN2dZ6l3TYU8YbGPkmMg5Gh_XT_hJqABXwVWE6D5Qh4a2hNPVXD2.png" alt="img" style="zoom:50%;" />
 
-![image-20241009012115708](assets/image-20241009012115708.png)
+<img src="assets/image-20241009012115708.png" alt="image-20241009012115708" style="zoom:50%;" />
 
 
 

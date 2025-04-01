@@ -233,7 +233,7 @@ COW在`fork()`系统调用，以及C++的`string`等地方使用到，非常经�
 
  **input–output memory management unit** (**IOMMU**)是一种MMU，用于将DMA-capable I/O bus连接到主存上。和传统的MMU不同，传统的MMU负责将CPU看到的虚拟地址转化为实际的物理地址。而IOMMU则是将设备看到的虚拟地址转化为实际的物理地址。
 
-![undefined](assets/1920px-MMU_and_IOMMU.svg.png)
+<img src="assets/1920px-MMU_and_IOMMU.svg.png" alt="undefined" style="zoom:25%;" />
 
 
 
@@ -307,4 +307,12 @@ Linux下内存管理分为虚拟内存和物理内存。
 
 
 # 5. Time
+
+
+
+
+
+# 6. Process
+
+
 
