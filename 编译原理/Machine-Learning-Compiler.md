@@ -140,3 +140,11 @@ dataflow block用以标注计算图区域
 
 <img src="assets/1713773709318.jpeg" alt="No alternative text description for this image" style="zoom:50%;" />
 
+
+
+# MLIR
+
+
+
+## MLIR的Motivation
+
